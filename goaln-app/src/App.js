@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'
 import {Switch, Route} from 'react-router-dom'
+import config from './config.js'
+
 import Menu from './modules/menu.js'
 import Users from './modules/users.js'
 import Goals from './pages/Goals.js'
@@ -20,7 +22,7 @@ class App extends Component {
 
 	get_user_info(id){
 		console.log('getting user info');
-		axios.get('http://localhost:3030/user/',
+		axios.get(config.server+'/user/',
 			{
 				params:{id:id||this.state.id}
 			},

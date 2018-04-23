@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import Goal from '../modules/goal.js';
+import config from '../config.js'
 import axios from 'axios'
 
 
 class Goals extends Component {
 	constructor (props) {
 		super()
-		var id='5adcefbaed9d970d42d33d65'
+		var id=config.def_id
 		this.get_user_goals(id|| props.id)
 	}
 	state={
-		id:'5adcefbaed9d970d42d33d65',
+		id:config.def_id,
 	}
 	get_user_goals(id){
 		console.log('getting goals');
-		axios.get('http://localhost:3030/usergoals/',
+		axios.get(config.server+'/usergoals/',
 			{
 				params:{id:this.state.id}
 			},

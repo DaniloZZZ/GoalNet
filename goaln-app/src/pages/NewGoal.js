@@ -3,27 +3,26 @@ import axios from 'axios'
 import  './newgoal.css'
 import { Form, Text, TextArea, Checkbox } from 'react-form';
 import DatePicker from 'react-datepicker';
+import config from '../config.js'
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-
-
 class Goals extends Component {
 	state={
-		id:'5adcefbaed9d970d42d33d65',
+		id:config.def_id,
 		date:moment(),
 	}
 	constructor (props) {
 		super()
-		var id='5adcefbaed9d970d42d33d65'
+		var id=config.def_id
 		this.get_user_goals(id|| props.id)
 		this.handleDateChange = this.handleDateChange.bind(this);
 	}
 
 	get_user_goals(id){
 		console.log('getting goals');
-		axios.get('http://localhost:3030/usergoals/',
+		axios.get(config.server+'/usergoals/',
 			{
 				params:{id:this.state.id}
 			},
@@ -43,7 +42,7 @@ class Goals extends Component {
 			console.log('data',data)
 			console.log('date',date)
 			axios.post(
-				'http://localhost:3030/newgoal',
+				config.server+'/newgoal',
 				Object.assign(data,{
 					date:date,
 					id:id})

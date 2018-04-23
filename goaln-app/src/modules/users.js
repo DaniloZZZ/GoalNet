@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import './users.css';
-
+import config from '../config.js'
 
 class Users extends Component {
 	constructor (props) {
@@ -9,12 +9,12 @@ class Users extends Component {
 		this.get_users()
 	}
 	state={
-		id:'5adcefbaed9d970d42d33d65',
+		id:config.def_id,
 	}
 
 	get_users(id){
 		console.log('getting users');
-		axios.get('http://localhost:3030/users/',
+		axios.get(config.server+'/users/',
 			{
 				params:{id:this.state.id}
 			},
