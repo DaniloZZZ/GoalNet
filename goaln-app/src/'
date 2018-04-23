@@ -1,0 +1,19 @@
+var mongoose = require('mongoose')
+console.log(mongoose.Shema)
+
+var userShem = mongoose.Schema({
+	fname: String,
+	lname: String,
+	login: String,
+	pass: String,
+	goal_ids: [ String ],
+})
+var goalShem = mongoose.Schema({
+	title: String,
+	deadline: Date,
+	desc: String,
+},{collection:'Goals')
+
+module.exports = {
+	Goal:mongoose.model('Goal',goalShem)
+}

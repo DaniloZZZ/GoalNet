@@ -1,0 +1,21 @@
+.menu{
+	background-color:#bbb;
+	width:150px;
+	margin-left:20%;
+	position:absolute;
+}
+.menu-item{
+	margin:5px;
+	background-color:#ccc;
+}
+
+a{
+	color:#000;
+	text-decoration: none;
+}
+@media only screen and (max-width: 768px) {
+	/* For mobile phones: */
+	.menu {
+		margin-left:10%;
+	}
+}

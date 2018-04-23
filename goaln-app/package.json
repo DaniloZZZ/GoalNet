@@ -1,0 +1,24 @@
+{
+  "name": "goaln-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.4",
+    "moment": "^2.22.1",
+    "mongoose": "^5.0.15",
+    "react": "^16.3.2",
+    "react-datepicker": "^1.4.1",
+    "react-dom": "^16.3.2",
+    "react-form": "^3.5.3",
+    "react-router": "^4.2.0",
+    "react-scripts": "1.1.4",
+    "react-slide-menu": "^0.5.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

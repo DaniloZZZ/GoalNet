@@ -1,0 +1,39 @@
+
+input {
+	margin-bottom: 1rem;
+	display: block;
+	width:100%;
+}
+
+textarea {
+	margin-bottom: 1rem;
+	display: block;
+	width:100%;
+}
+
+button{
+	display: block;
+	border: none;
+	padding: 8px 24px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+.datePicker{
+	display:block;
+	text-align:left;
+}
+label{
+	font-size:16px;
+}
+#share{
+	width:auto;
+	display:inline;
+	margin:8px 10px;;
+}
+form{
+	width:300px;
+	text-align:left;
+}

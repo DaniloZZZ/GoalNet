@@ -1,0 +1,58 @@
+.App {
+  text-align: center;
+}
+.App-intro {
+  font-size: large;
+}
+.main{
+	margin-left:calc(22% + 170px);
+}
+.goal-cont{
+	margin-top:1em;
+	width:calc(35% + 100px);
+	margin-top:40px;
+}
+@media only screen and (max-width: 768px) {
+	/* For mobile phones: */
+	.main
+	{
+	margin-left:calc(12% + 150px);
+	width:calc(35% + 100px);
+	}
+}
+.logo{
+	width:150px;
+	margin-left:20%;
+	font-size:30px;
+}
+.main{
+	margin-top:50px;
+}
+.uname-wrap{
+	font-size:24px;
+	padding:10px 6px;
+	display:inline;
+}
+.uname{
+	line-height:40px;
+	font-size:24px;
+	position:absolute;
+	padding:20px 6px;
+}
+.uinfo{
+	right:10%;
+	width:200px;
+	top:0px;
+	position:absolute;
+	background-color:#add;
+}
+#u.avatar{
+	margin-left:100px;
+}
+
+
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
