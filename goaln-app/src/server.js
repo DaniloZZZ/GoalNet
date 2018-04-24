@@ -106,6 +106,15 @@ app.post('/newgoal', cors(),function(req, res) {
 			res.send("OK")})
 });
 
+app.post('/donegoal', cors(),function(req, res) {
+	var id = req.query.id;
+	Goal.update(
+		{_id:id},
+		{$set:{done:true} },
+		console.log
+	)
+	res.send("OK")})
+});
 mongoose.connect('mongodb://localhost/local');
 app.listen(3030, function () {
 	  console.log('Example app listening on port 3000!');
