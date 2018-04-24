@@ -16,7 +16,7 @@ class App extends Component {
 		this.get_user_info()
 	}
 	state={
-		id:'5adcefbaed9d970d42d33d65',
+		id:config.def_id,
 		uinfo:{avatar:null,fname:'fa'},
 	}
 
@@ -57,6 +57,7 @@ class App extends Component {
 				<Route path='/home' component={Goals}/>
 				<Route path='/newgoal' component={NewGoal}>
 				</Route>
+				<Route path='/user/:id' component={Goals}/>
 				<Route path='/user/'>
 					user
 				</Route>

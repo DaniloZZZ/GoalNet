@@ -5,19 +5,32 @@ import axios from 'axios'
 
 
 class Goals extends Component {
-	constructor (props) {
-		super()
-		var id=config.def_id
-		this.get_user_goals(id|| props.id)
-	}
+
 	state={
 		id:config.def_id,
 	}
+	constructor (props) {
+		super(props)
+		console.log("ID",props)
+		var id=props.id||props.match.params.id
+		id= id||config.def_id
+
+		console.log("ID",id)
+		this.get_user_goals(id)
+		//this.componentWillReceiveProps= this.componentWillReceiveProps.bind(this);
+
+	}
+	componentWillReceiveProps(props){
+		var id=props.id||props.match.params.id
+		console.log('new ID',id)
+		this.get_user_goals(id)
+	}
 	get_user_goals(id){
+		id= id||this.state.id
 		console.log('getting goals');
 		axios.get(config.server+'/usergoals/',
 			{
-				params:{id:this.state.id}
+				params:{id:id}
 			},
 		).then(g=> {
 			console.log('got goas',g)
@@ -28,7 +41,6 @@ class Goals extends Component {
 	render() {
 		var goals="No goals yet"
 		if (this.state.goals) {
-			console.log(this.state.goals)
 			goals=this.state.goals.map(
 				(e,i)=>{
 					return (<Goal key={i} data={e}/>)

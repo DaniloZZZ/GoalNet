@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import {Link} from 'react-router-dom'
+
 import './users.css';
 import config from '../config.js'
 
@@ -31,14 +33,14 @@ class Users extends Component {
 				(e,i)=>
 				{return (
 					<div>
-						<a key={i} href={"users/"+e._id}>
+						<Link key={i} to={"/user/"+e._id}>
 							<img
 								src={e.avatar} 
 								alt={"view"+e.fname+"'s goals"}
 								className="avatar"/>
 							<div className='name'>{e.fname}
 							</div>
-						</a>
+						</Link>
 					</div>
 				)
 				})

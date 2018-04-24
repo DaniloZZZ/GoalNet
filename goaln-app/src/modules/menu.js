@@ -29,7 +29,7 @@ class Menu extends Component {
   render() {
 	  var items=this.menuItems.map(i=>{
 		  return (<div className="menu-item">
-				  <Link to={i.link}>{i.name}</Link>
+			  <Link to={'/'+i.link}>{i.name}</Link>
 				  </div>)
 	  })
     return (

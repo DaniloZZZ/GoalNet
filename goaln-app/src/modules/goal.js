@@ -17,6 +17,11 @@ class Goal extends Component {
 			this.state.title=this.props.data.title
 		}
 	}
+	componentWillReceiveProps(props){
+		this.setState(
+			{title:props.data.title}
+			)
+	}
 	get_data(){
 		console.log('getting goal');
 		axios.get('http://localhost:3030/goals/',
