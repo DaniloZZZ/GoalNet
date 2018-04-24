@@ -113,7 +113,7 @@ app.post('/donegoal', cors(),function(req, res) {
 		{$set:{done:true} },
 		console.log
 	)
-	res.send("OK")})
+	res.send("OK")
 });
 mongoose.connect('mongodb://localhost/local');
 app.listen(3030, function () {
