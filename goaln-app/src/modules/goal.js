@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import ReactHover from 'react-hover'
 import config from '../config.js'
+import Comments from './comments/comments.coffee'
+
 import './goal.css';
 
 class Goal extends Component {
@@ -53,11 +55,12 @@ class Goal extends Component {
 	}
 
 	render() {
-		var done = ""
+		var done = false
 		 if (this.state.done){
 			done="done"
 		}
 		return (
+			<div>
 			<div className={"goal "+done }>
 						<div className='goal-title'>
 							{this.state.title}
@@ -71,7 +74,10 @@ class Goal extends Component {
 							</div>
 						</div>
 			</div>
+			<Comments gid={this.state._id} comments={this.state.comments}/>
+			</div>
 		);
 	}
 }
+
 export default Goal

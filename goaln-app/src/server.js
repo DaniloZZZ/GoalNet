@@ -1,6 +1,8 @@
 var express = require('express');
 var Goal = require('./db/Shemas.js').Goal;
 var User = require('./db/Shemas.js').User;
+var config = require('./config.js')
+
 
 var mongoose = require('mongoose')
 var cors= require('cors')
@@ -115,7 +117,7 @@ app.post('/donegoal', cors(),function(req, res) {
 	)
 	res.send("OK")
 });
-mongoose.connect('mongodb://localhost/local');
+mongoose.connect(congig.db);
 app.listen(3030, function () {
 	  console.log('Example app listening on port 3000!');
 });

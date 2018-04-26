@@ -1,0 +1,14 @@
+.comm{
+	background-color:#a99;
+	margin:4px;
+	font-size:14px;
+}
+.comments{
+	border: 1px solid lightblue;
+	background-color:rgba(30, 230, 203);
+	font-size:15px;
+	text-align:left;
+	width:85%;
+	margin:auto;
+	margin-top:-10px;
+}
