@@ -108,6 +108,28 @@ app.post('/newgoal', cors(),function(req, res) {
 			res.send("OK")})
 });
 
+app.post('/comment', cors(),function(req, res) {
+	var id = req.query.id;
+	d = req.body
+	console.log('new comment',d.text)
+	if (d.act=='add'){
+		Goal.update(
+			{_id:d.id},
+			{$push:
+				{comments:
+					{
+						user_id:d.uid,
+						text:d.text,
+						date:d.date,
+					}
+				} 
+			},
+			console.log
+		)
+		res.send("OK")
+	}
+});
+
 app.post('/donegoal', cors(),function(req, res) {
 	var id = req.query.id;
 	Goal.update(
@@ -117,7 +139,18 @@ app.post('/donegoal', cors(),function(req, res) {
 	)
 	res.send("OK")
 });
-mongoose.connect(congig.db);
+
+app.post('/donegoal', cors(),function(req, res) {
+	var id = req.query.id;
+	Goal.update(
+		{_id:id},
+		{$set:{done:true} },
+		console.log
+	)
+	res.send("OK")
+});
+console.log(config.db)
+mongoose.connect(config.db);
 app.listen(3030, function () {
 	  console.log('Example app listening on port 3000!');
 });

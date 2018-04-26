@@ -7,4 +7,5 @@ var config={
 }
 console.log(config)
 
-export default config
+module.exports=config
+

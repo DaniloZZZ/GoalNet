@@ -27,22 +27,15 @@ class Comments extends Component
 		uid =  @state.uid
 		gid =  @state.gid
 		(data) ->
-			l data, id
-		axios.post
-				config.server+'/comment/'
-				Object.assign
-					act:'add'
-					id:gid
-					uid:uid
-					text:data.comment
-					date:moment()
-
-
-		).then(g=> {
-			console.log('got user info',g.data)
-			this.setState({uinfo:g.data})
-		})
-
+			axios.post config.server+'/comment/',
+					Object.assign
+						act:'add'
+						id:gid
+						uid:uid
+						text:data.comment
+						date:moment()
+			.then (g)->
+				console.log('Saved comment',g.data)
 
 
 	render: ->
