@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import ReactHover from 'react-hover'
+import config from '../config.js'
 import './goal.css';
 
 class Goal extends Component {
@@ -14,31 +16,62 @@ class Goal extends Component {
 			this.get_data()
 		}
 		else{
-			this.state.title=this.props.data.title
+			var goal = this.props.data
+			this.state = Object.assign(this.state,goal)
 		}
 	}
 	componentWillReceiveProps(props){
-		this.setState(
-			{title:props.data.title}
-			)
+		var goal = props.data
+		this.setState(goal
+		)
 	}
+
 	get_data(){
 		console.log('getting goal');
 		axios.get('http://localhost:3030/goals/',
-				{
-					params:{id:this.state.id}
-				},
+			{
+				params:{id:this.state.id}
+			},
 		).then(g=> {
 			console.log('got goal',g)
-			this.setState({title:g.data[0].title})
+			var goal =g.data[0]
+			this.setState(goal)
+		})
+	}
+	
+	deleteGoal(id){
+		return function(){
+		console.log('deleting  goal');
+		axios.get(config.server+'/donegoal/',
+			{
+				params:{id:id}
+			},
+		).then(g=> {
+			console.log('got goal',g)
 		})
 		}
+	}
+
 	render() {
-    return (
-      <div className="goal">
-	  {this.state.title}
-      </div>
-    );
-  }
+		var done = ""
+		 if (this.state.done){
+			done="done"
+		}
+		return (
+			<div className={"goal "+done }>
+						<div className='goal-title'>
+							{this.state.title}
+						</div>
+						<div className='goal-desc'>
+							{this.state.desc}
+						</div>
+						<div className='goal-hover'>
+							<div class='goal-del' onClick={this.deleteGoal(this.state._id)}>
+								<img className='goal-img' src="https://image.flaticon.com/icons/png/512/61/61685.png"/>
+							</div>
+						</div>
+			</div>
+		);
+	}
 }
 export default Goal

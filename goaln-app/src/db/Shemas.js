@@ -14,6 +14,7 @@ var goalShem = mongoose.Schema({
 	title: String,
 	deadline: Date,
 	desc: String,
+	done: Boolean,
 },{collection:'Goals'})
 
 module.exports = {
