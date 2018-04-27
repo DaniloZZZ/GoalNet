@@ -19,4 +19,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
+=======
+
+
+nohup.out
+>>>>>>> be66256a9ca9b08e129c1548af418db38adf8ed0
 config.js

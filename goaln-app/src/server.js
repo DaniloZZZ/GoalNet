@@ -111,13 +111,13 @@ app.post('/newgoal', cors(),function(req, res) {
 app.post('/comment', cors(),function(req, res) {
 	var id = req.query.id;
 	d = req.body
-	console.log('new comment',d.text)
+	console.log('new comment',d)
 	if (d.act=='add'){
 		Goal.update(
 			{_id:d.id},
 			{$push:
 				{comments:
-					{
+					{ 
 						user_id:d.uid,
 						text:d.text,
 						date:d.date,

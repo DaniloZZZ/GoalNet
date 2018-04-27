@@ -15,6 +15,12 @@ var goalShem = mongoose.Schema({
 	deadline: Date,
 	desc: String,
 	done: Boolean,
+	comments:[{
+		user_id:mongoose.Schema.Types.ObjectId, 
+		text:String,
+		date:Date}
+]
+
 },{collection:'Goals'})
 
 module.exports = {
