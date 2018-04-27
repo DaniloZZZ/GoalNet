@@ -13,8 +13,10 @@ def set_time_sec(sec):
     s = sched.scheduler(time.time, time.sleep)
     def sch(i):
         def send():
-            tgf.send_state('notif',i.chat.id)
+            print('sending',sec)
+            tgf.send_state('notif',i.message.chat.id)
         s.enter(sec,1,send)
+        print('starting',sec)
         s.run()
     return sch
 
