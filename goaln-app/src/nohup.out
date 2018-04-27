@@ -66,3 +66,33 @@ got goal [ { _id: 5adcf00ced9d970d42d33d67,
     title: 'To get an A at English',
     deadline: 2018-04-22T20:26:52.873Z,
     desc: 'I want a good mark for english' } ]
+Welcome to mongo-express
+------------------------
+
+
+
+[31mAddress http://0.0.0.0:8081 already in use! You need to pick a different host and/or port.[39m
+Maybe mongo-express is already running?
+
+If you are still having trouble, try Googling for the key parts of the following error object before posting an issue
+{"code":"EADDRINUSE","errno":"EADDRINUSE","syscall":"listen","address":"0.0.0.0","port":8081}
+Welcome to mongo-express
+------------------------
+
+
+
+[31mAddress http://0.0.0.0:8081 already in use! You need to pick a different host and/or port.[39m
+Maybe mongo-express is already running?
+
+If you are still having trouble, try Googling for the key parts of the following error object before posting an issue
+{"code":"EADDRINUSE","errno":"EADDRINUSE","syscall":"listen","address":"0.0.0.0","port":8081}
+Welcome to mongo-express
+------------------------
+
+
+
+[31mAddress http://0.0.0.0:8081 already in use! You need to pick a different host and/or port.[39m
+Maybe mongo-express is already running?
+
+If you are still having trouble, try Googling for the key parts of the following error object before posting an issue
+{"code":"EADDRINUSE","errno":"EADDRINUSE","syscall":"listen","address":"0.0.0.0","port":8081}
