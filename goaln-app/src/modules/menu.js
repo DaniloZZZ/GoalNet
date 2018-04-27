@@ -27,8 +27,8 @@ class Menu extends Component {
 		]
 	}
   render() {
-	  var items=this.menuItems.map(i=>{
-		  return (<div className="menu-item">
+	  var items=this.menuItems.map((i,num)=>{
+		  return (<div key={num} className="menu-item">
 			  <Link to={'/'+i.link}>{i.name}</Link>
 				  </div>)
 	  })

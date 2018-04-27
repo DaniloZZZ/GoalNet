@@ -32,8 +32,8 @@ class Users extends Component {
 			users=this.state.users.map(
 				(e,i)=>
 				{return (
-					<div>
-						<Link key={i} to={"/user/"+e._id}>
+					<div key={i}>
+						<Link to={"/user/"+e._id}>
 							<img
 								src={e.avatar} 
 								alt={"view"+e.fname+"'s goals"}

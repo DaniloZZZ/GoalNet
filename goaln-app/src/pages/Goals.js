@@ -54,18 +54,21 @@ class Goals extends Component {
 	}
 
 	render() {
-		var goals="No goals yet"
+		var goals="Loading goals..."
 		if (this.state.goals) {
 			goals=this.state.goals.map(
 				(e,i)=>{
 					if (!e.done||this.state.all){
 						return (<Goal key={i} data={e}/>)
 					}
-				})
+				}).filter(Boolean)
 		}
+		console.log('goals',goals)
 		return (
 			<div className='goal-cont'>
-				{goals}
+				{goals.length>0?
+					goals
+					:'No goals here'}
 			</div>
 
 		);
