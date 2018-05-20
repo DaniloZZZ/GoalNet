@@ -2,7 +2,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 moment = require 'moment'
 import DOM from 'react-dom-factories'
-import config from '../../config.js'
+config =  require process.env.GOALNET_CONFIG_FILE
 import './comments.css'
 import { Form, Text, TextArea, Checkbox } from 'react-form';
 

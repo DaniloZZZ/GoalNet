@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import ReactHover from 'react-hover'
-import config from '../config.js'
 import Comments from './comments/comments.coffee'
 
 import './goal.css';
+
+var config= require(process.env.GOALNET_CONFIG_FILE)
 
 class Goal extends Component {
 	constructor (props) {

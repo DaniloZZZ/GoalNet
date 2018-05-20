@@ -1,7 +1,7 @@
 var express = require('express');
 var Goal = require('./db/Shemas.js').Goal;
 var User = require('./db/Shemas.js').User;
-var config = require('./config.js')
+import config from process.env.GOALNET_CONFIG_FILE
 
 
 var mongoose = require('mongoose')

@@ -3,12 +3,12 @@ import axios from 'axios'
 import  './newgoal.css'
 import { Form, Text, TextArea, Checkbox } from 'react-form';
 import DatePicker from 'react-datepicker';
-import config from '../config.js'
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Picker from '../modules/picker/picker.coffee';
 
+var config= require(process.env.GOALNET_CONFIG_FILE)
 
 class Goals extends Component {
 	state={

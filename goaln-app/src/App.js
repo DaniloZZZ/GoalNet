@@ -3,12 +3,13 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'
 import {Switch, Route} from 'react-router-dom'
-import config from './config.js'
 
 import Menu from './modules/menu.js'
 import Users from './modules/users.js'
 import Goals from './pages/Goals.js'
 import NewGoal from './pages/NewGoal.js'
+
+var config= require(process.env.GOALNET_CONFIG_FILE)
 
 class App extends Component {
 	constructor (props) {

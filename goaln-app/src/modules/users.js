@@ -3,7 +3,8 @@ import axios from 'axios'
 import {Link} from 'react-router-dom'
 
 import './users.css';
-import config from '../config.js'
+console.log('fdas',process.env)
+var config= require(process.env.GOALNET_CONFIG_FILE)
 
 class Users extends Component {
 	constructor (props) {

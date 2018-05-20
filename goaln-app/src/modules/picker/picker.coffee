@@ -3,7 +3,7 @@ ReactDOM = require 'react-dom'
 moment = require 'moment'
 
 import DOM from 'react-dom-factories'
-import config from '../../config.js'
+config =  require process.env.GOALNET_CONFIG_FILE
 import { Form, Text, TextArea, Checkbox } from 'react-form'
 import Canvas from './canvas.coffee'
 

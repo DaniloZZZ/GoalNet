@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import Goal from '../modules/goal.js';
-import config from '../config.js'
 import axios from 'axios'
 
+var config= require(process.env.GOALNET_CONFIG_FILE)
 
 class Goals extends Component {
-
 	state={
 		id:config.def_id,
 		all:false,
