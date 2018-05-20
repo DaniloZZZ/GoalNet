@@ -60,3 +60,4 @@ typings/
 *.pyc
 **/config.py
 **/config.js
+bot/data.p bot/states.p

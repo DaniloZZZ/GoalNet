@@ -59,6 +59,33 @@ function find_goals(ids){
 				})
 	})
 }
+var value = null
+var response=null
+app.get('/setlong', function (reqweb, resweb) {
+	var valweb = reqweb.query.val;
+	console.log('got setlong')
+	if(response){
+		response.send(valweb)
+		response=null
+		resweb.send(value)
+	}
+	else{
+		resweb.send('NOthing')
+	}
+});
+
+app.get('/long', function (req, res) {
+	console.log('got req')
+	var val = req.query.val;
+	response=res
+	value = val
+	setTimeout(()=>{
+		if(response){
+			response.send('delay')
+		}
+		response=null
+	},6000)
+})
 app.get('/usergoals', function (req, res) {
 		var u_id = req.query.id;
 		//res.header("Access-Control-Allow-Origin", "*");
@@ -149,8 +176,10 @@ app.post('/donegoal', cors(),function(req, res) {
 	)
 	res.send("OK")
 });
+
 console.log(config.db)
 mongoose.connect(config.db);
-app.listen(3030, function () {
-	  console.log('Example app listening on port 3000!');
+var port = 3030;
+app.listen(port, function () {
+	  console.log('Example app listening on port '+port+'!');
 });
