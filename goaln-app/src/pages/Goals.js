@@ -39,7 +39,6 @@ class Goals extends Component {
 		this.get_user_goals(id)
 	}
 
-
 	get_user_goals(id){
 		id= id||this.state.id
 		console.log('getting goals');

@@ -20,51 +20,55 @@ Route = Router.Route
 class Picker extends Component
 	constructor: (props)->
 		super()
-		momd = (i)=>moment().days(i)
-		@days = (date:momd(i),items:[],id:i for i in [1,2,3,4,5,6,7])
-		l @days
 		@state =
 			dates:[]
 			children:[]
-			sched:@days
+
 	get_user_data: (id) ->
 		_=this
+
+	sendReq: =>
+		val = document.getElementById('inp').value
+		axios.get config.server+'/setlong/',
+			params:
+					val:val
+		.then (g) =>
+			console.log('long',g)
+			@setState(elecval:g.data)
 
 	new_comment: ->
 		uid =  @state.uid
 		gid =  @state.gid
 
-	itemCreate: (date)=>(item)=>
+	itemCreate: (item) =>
 		l 'new item',item
-		sch = @state.sched.map (s)=>
-			if s.date==date
-				l s
-				s.items.push(item)
-			else
-				s.items
+		Object.assign(item,id:@state.children.length+1)
 		@setState
-			children:sch
+			children:@state.children.concat(item)
+
 
 	render: ->
-		canvs=for day in @state.sched
-			do (day)=>
-				L_ Canvas,
-					date:day.date.format('dddd')
-					id:day.id
-					children:day.items
-					onItemCreate:@itemCreate(day.date)
 		L.div
 			className:'picker'
 			style:
 				backgroundColor:'blue'
-				position:'relative'
-				borderRadius:'0.3em'
-				display:'flex'
-
+				posirion:'relative'
+				height:'200px'
+				width:'200px'
+			L_ Canvas,
+				kak:'afaasdfa'
+				idx:12
+				children:@state.children
+				onItemCreate:@itemCreate
 			L.div
 				style:
-					width:'auto'
-				canvs...
+					height:'100px'
+					width:'100px'
+					backgroundColor:'green'
+				onMouseDown:@sendReq
+				@state.elecval
+				L.input type:'text',id:'inp'
+
 
 export default Picker
 	

@@ -32,6 +32,7 @@
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
     "moment": "^2.22.1",
+    "mongo-express": "^0.47.0",
     "mongoose": "^5.0.15",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",

@@ -5,7 +5,8 @@
   font-size: large;
 }
 .main{
-	margin-left:calc(22% + 170px);
+	margin-left:calc(17% + 170px);
+	width:calc(60% - 100px);
 }
 .goal-cont{
 	margin-top:1em;
