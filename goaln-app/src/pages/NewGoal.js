@@ -7,6 +7,8 @@ import config from '../config.js'
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import Picker from '../modules/picker/picker.coffee';
+
 
 class Goals extends Component {
 	state={
@@ -50,7 +52,10 @@ class Goals extends Component {
 		}
 	}
 	render() {
-		return (<Form onSubmit={
+		return (
+			
+			<div>
+			<Form onSubmit={
 			this.submitForm(
 				this.state.date,
 				this.state.id)} className='form' render={(
@@ -73,6 +78,8 @@ class Goals extends Component {
     </form>
 	  )}
   } />
+  <Picker/>
+  </div>
   )
 	}
 }

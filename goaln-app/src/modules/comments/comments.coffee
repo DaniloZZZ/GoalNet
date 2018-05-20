@@ -68,8 +68,7 @@ class Comments extends Component
 							L.div
 								className:'comm'
 								key:num
-								L.div
-									style: position:'relative'
+								L.div style: position:'relative'
 									L.div
 										className:'comm-name'
 										name
@@ -81,8 +80,7 @@ class Comments extends Component
 											position:'relative'
 											color:'gray'
 										moment(i.date).format("dddd hh:mm")
-									L.div
-										className:'comm-text'
+									L.div className:'comm-text'
 										i.text
 					else ' '
 			L.div
