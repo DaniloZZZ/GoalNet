@@ -7,7 +7,7 @@ import {Switch, Route} from 'react-router-dom'
 import Menu from './modules/menu.js'
 import Users from './modules/users.js'
 import Goals from './pages/Goals.js'
-import NewGoal from './pages/NewGoal.js'
+import NewGoal from './pages/NewGoal.coffee'
 
 var config= require(process.env.GOALNET_CONFIG_FILE)
 
@@ -18,9 +18,9 @@ class App extends Component {
 	}
 	state={
 		id:config.def_id,
-		uinfo:{avatar:null,fname:'fa'},
+		uinfo:{avatar:null,fname:'fa'}
 	}
-
+ 
 	get_user_info(id){
 		console.log('getting user info');
 		axios.get(config.server+'/user/',

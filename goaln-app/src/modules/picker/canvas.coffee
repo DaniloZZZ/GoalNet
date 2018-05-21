@@ -118,7 +118,7 @@ class Canvas extends Component
 				key:i.id
 				L.div
 					className:'goal-time'
-					'goal ',i.id
+					'goal ',i.name, i.id
 				L.div
 				L.div
 					className:'picker-date'
@@ -165,7 +165,7 @@ class Canvas extends Component
 				@props.date
 			L.div
 				className:'canvas'
-				style: 
+				style:
 					backgroundColor:'black'
 					height:'3px'
 					width:'100%'

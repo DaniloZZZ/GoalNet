@@ -19,14 +19,13 @@ Route = Router.Route
 
 class Picker extends Component
 	constructor: (props)->
-		super()
+		super(props)
 		momd = (i)=>moment().days(i)
-		@days = (date:momd(i),items:[],id:i for i in [1,2,3,4,5,6,7])
-		l @days
+		sch = props.schedule || (date:momd(i),items:[],id:i for i in [1,2,3,4,5,6,7])
 		@state =
 			dates:[]
 			children:[]
-			sched:@days
+			sched:sch
 	get_user_data: (id) ->
 		_=this
 
@@ -38,12 +37,13 @@ class Picker extends Component
 		l 'new item',item
 		sch = @state.sched.map (s)=>
 			if s.date==date
-				l s
+				item.id = (s.items||[]).length+1
+				l item,s.items
 				s.items.push(item)
-			else
-				s.items
+			return s
+		l sch
 		@setState
-			children:sch
+			sched:sch
 
 	render: ->
 		canvs=for day in @state.sched
@@ -56,7 +56,7 @@ class Picker extends Component
 		L.div
 			className:'picker'
 			style:
-				backgroundColor:'blue'
+				backgroundColor:'#fff0ed'
 				position:'relative'
 				borderRadius:'0.3em'
 				display:'flex'

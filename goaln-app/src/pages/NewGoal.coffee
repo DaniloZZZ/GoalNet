@@ -25,15 +25,25 @@ class Goals extends Component
 		super()
 		id=config.def_id
 		@get_user_goals(id|| props.id)
+		.then (g)=>
+			console.log('got goas',g)
+			@setState goals:g
+		@get_user_sched(id|| props.id)
 		@handleDateChange =@handleDateChange.bind(@)
 
 	get_user_goals: (id)->
 		log 'getting goals'
-		axios.get config.server+'/usergoals/',
-			params:id:@state.id
-		.then (g)=>
-			console.log('got goas',g)
-			@setState goals:g.data
+		new Promise (res,rej)=>
+			axios.get config.server+'/usergoals/',
+				params:id:@state.id
+			.then (g)=>res g.data
+			.catch rej
+
+	get_user_sched: (id)=>
+		@get_user_goals(id)
+		.then (goals)=>
+			
+		log 'getting goals'
 
 	handleDateChange: (date)=>
 		@setState
@@ -46,9 +56,8 @@ class Goals extends Component
 			log 'date',date
 			axios.post(
 				config.server+'/newgoal'
-				Object.assign
-					data
-					date:date,
+				Object.assign data,
+					date:date
 					id:id
 			)
 
@@ -74,7 +83,7 @@ class Goals extends Component
 							L_ DatePicker,
 								selected:@state.date
 								onChange:@handleDateChange
-						L.button className:'btn', type:'submit'
+						L.button className:'btn', type:'submit',
 							'Create'
 			L_ Picker, schedule:@state.schedule
 export default Goals

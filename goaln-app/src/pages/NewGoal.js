@@ -78,7 +78,7 @@ class Goals extends Component {
     </form>
 	  )}
   } />
-  <Picker/>
+  <Picker schedule=this.state.schedule/>
   </div>
   )
 	}
