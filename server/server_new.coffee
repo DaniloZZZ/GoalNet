@@ -5,8 +5,8 @@ log.level='debug'
 config = require './config-server.js'
 mongoose = require('mongoose')
 express = require('express')
-Schemas= require '../DB/schema/Shemas.js'
-Goal = Schemas.Goal
+#Schemas= require '../DB/schema/Shemas.js'
+Goal = require './db/GoalNode.coffee'
 
 cors = require('cors')
 app = express()
@@ -34,7 +34,10 @@ app.use express.json()
 app.use express.urlencoded()
 # to support URL-encoded bodies
 
-app.get '/goal', (req, res) ->
+new Goal(app).registerAppEndpoints()
+
+"""
+app.get '/gddoal', (req, res) ->
 	log.info req.url, 'got connection ',req.headers.host
 	log.debug req.headers
 	id = req.query.id
@@ -48,7 +51,7 @@ app.get '/goal', (req, res) ->
 				res.send err.name
 			else
 				log.info 'db returned: ',goal
-				res.send 'OK'
+				res.send goal
 
 app.post '/newgoal', cors(), (req, res) ->
 	res.header 'Access-Control-Allow-Origin', '*'
@@ -82,6 +85,7 @@ app.post '/donegoal', cors(), (req, res) ->
 	Goal.update _id:id, $set: done: true, console.log
 	res.send 'OK'
 	return
+"""
 
 console.log config.db
 mongoose.connect config.db
