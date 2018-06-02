@@ -51,11 +51,11 @@ class BaseNode
 		new Promise (resolve,reject)=>
 			node = new @schema props
 			node.save (err)->
-					if err
-						reject err
-					else
-						log.info 'db returned: ',err
-						resolve 'OK'
+				if err
+					reject err
+				else
+					log.info 'db returned: ',err
+					resolve 'OK'
 
 	# wraps with logging methods
 	regCallback: (dbcall)-> (req,res)->

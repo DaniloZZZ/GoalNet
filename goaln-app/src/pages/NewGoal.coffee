@@ -26,9 +26,8 @@ class Goals extends Component
 		id=config.def_id
 		@get_user_goals(id|| props.id)
 		.then (g)=>
-			console.log('got goas',g)
+			@get_user_sched g
 			@setState goals:g
-		@get_user_sched(id|| props.id)
 		@handleDateChange =@handleDateChange.bind(@)
 
 	get_user_goals: (id)->
@@ -39,34 +38,43 @@ class Goals extends Component
 			.then (g)=>res g.data
 			.catch rej
 
-	get_user_sched: (id)=>
-		@get_user_goals(id)
-		.then (goals)=>
-			
-		log 'getting goals'
+	get_user_sched: (goals)=>
+		momd = (i)=>moment().days(i)
+		# goals is [{ goal:'foo',sched:[{start:'121',id:'adf'},{...}]},...]
+		# Making array of items
+		# {start:,end:,name:goalname}
+		makeItemArr=(goal)->
+			(Object.assign item,name:goal.title for item in goal.sched)
+		arrays=goals.map makeItemArr
+		items=[].concat arrays...
+		@setState schedule:items
 
 	handleDateChange: (date)=>
 		@setState
 			date: date
 		console.log('date',@state.date)
+	schedChange: (sch)=>
+		log 'page sched change',sch
+		log 'setting state'
+		@setState
+			schedule:sch
 
 	submitForm:(date,id)=>
 		return (data,e,api)=>
-			log 'data',data
-			log 'date',date
-			axios.post(
-				config.server+'/newgoal'
-				Object.assign data,
+			goal=Object.assign data,
 					date:date
+					sched: @state.schedule.filter (i)-> i.label=='new'
 					id:id
+			log 'newgoal:',goal
+			axios.post(
+				config.server+'/newgoal',goal
 			)
 
 	render: ->
 		L.div
 			className:'newgoal'
 			L_ Form,
-				onSubmit: ()=>
-					@submitForm @state.date,@state.id
+				onSubmit:@submitForm @state.date,@state.id
 				className:'form'
 				render:(api)=>
 					L.form
@@ -85,5 +93,7 @@ class Goals extends Component
 								onChange:@handleDateChange
 						L.button className:'btn', type:'submit',
 							'Create'
-			L_ Picker, schedule:@state.schedule
+			L_ Picker, schedule:@state.schedule, onChange:@schedChange
+
 export default Goals
+

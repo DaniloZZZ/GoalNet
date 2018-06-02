@@ -22,34 +22,54 @@ class Picker extends Component
 		super(props)
 		momd = (i)=>moment().days(i)
 		sch = props.schedule || (date:momd(i),items:[],id:i for i in [1,2,3,4,5,6,7])
+		dates=(momd(i) for i in [1,2,3,4,5,6,7])
 		@state =
-			dates:[]
+			dates:dates
 			children:[]
-			sched:sch
-	get_user_data: (id) ->
-		_=this
-
-	new_comment: ->
-		uid =  @state.uid
-		gid =  @state.gid
+			schedule:sch
 
 	itemCreate: (date)=>(item)=>
 		l 'new item',item
-		sch = @state.sched.map (s)=>
+		sch = @state.schedule.map (s)=>
 			if s.date==date
 				item.id = (s.items||[]).length+1
+				item.label='new'
 				l item,s.items
 				s.items.push(item)
 			return s
-		l sch
-		@setState
-			sched:sch
+		l 'item created, sch is', sch
+		# need to convert from local obj, sorted by day to 
+		# unified architecture [{start:Date,end:Date},..]
+		itemArr=sch.map (ch)->ch.items
+		unif_sch=[].concat itemArr...
+		l sch, unif_sch
+		@props.onChange(unif_sch)
+
+	@getDerivedStateFromProps: (props,state)->
+		# Converting from list of items to children of every day
+		if not props.schedule
+			return state
+		sch = props.schedule
+		l 'state der', state,sch
+		sch_new= []
+		n=0
+		for date in state.dates
+			do(date)->
+				n=n+1
+				this_day=sch.filter (i)->
+					moment(i.start).day()==date.day()
+				sch_new.push
+					date:date
+					items:this_day
+					id:date.day()
+		l sch,sch_new
+		Object.assign state, schedule:sch_new
 
 	render: ->
-		canvs=for day in @state.sched
+		canvs=for day in @state.schedule
 			do (day)=>
 				L_ Canvas,
-					date:day.date.format('dddd')
+					date:day.date
 					id:day.id
 					children:day.items
 					onItemCreate:@itemCreate(day.date)

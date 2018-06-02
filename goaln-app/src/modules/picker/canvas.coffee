@@ -33,25 +33,54 @@ detectPos = (e)=>
 
 class Canvas extends Component
 	constructor: (props)->
-		l props
 		super(props)
-		@ref = React.createRef()
-
+		ref = React.createRef()
 		@state =
 			dates:[]
 			vr:2
 			item:null
 			step:3
+			ref:ref
 
 	componentDidMount:()=>
-		height = @ref.current.clientHeight
+		height = @state.ref.current.clientHeight
 		@setState
 			height:height
 			step:height/60/24*15
+	@getDerivedStateFromProps:(props,state)=>
+		if not props.children
+			return
+		h=Canvas.getHeight(state)
+		children = props.children.map (i)->
+			copy=Object.assign {},i
+			copy.start=Canvas.moment2pix(i.start,h)
+			copy.end=Canvas.moment2pix(i.end,h)
+			return copy
+		Object.assign state, children:children
+
+	@getHeight:(state)->
+		if not state.height
+			h = 0
+		else
+			h = (state.ref.current||{}).clientHeight||0
+	@pix2moment:(pix,h,day)=>
+		# day is moment() objerct
+		min = 60*24/h*pix
+		# to int
+		hour = (min /60)|0
+		min = min%60|0
+		# normally day is moment object but need to copy it
+		ret = moment(day)||moment()
+		ret = ret.set hour:hour, minute:min
+	@moment2pix:(mom,h)=>
+		# convert to moment if received a str
+		mom=moment(mom)
+		mins=60*mom.hour()+mom.minute()
+		pix=h*mins/24/60
 
 	getRelPos:(e)->
 		[x,y] = detectPos(e)
-		self= @ref.current
+		self= @state.ref.current
 			.getBoundingClientRect()
 		[x - self.x, y - self.y]
 
@@ -72,7 +101,7 @@ class Canvas extends Component
 		e= if touch then e.changedTouches[0] else e
 		if @state.item || touch
 			if @state.item
-				@props.onItemCreate(@state.item)
+				@itemCreated (@state.item)
 			@setState item:null
 		else
 			[x,y] = @getRelPos(e)
@@ -92,19 +121,23 @@ class Canvas extends Component
 					start:y-y%@state.step
 					end:y-y%@state.step
 
-	get_hour:(pix)=>
-		if not @state.height
-			h = 0
-		else
-			h = if @ref.current then @ref.current.clientHeight else 0
-		# day is moment() objerct
-		min = 60*24/h*pix
-		# to int
-		hour = (min /60)|0
-		min = min%60|0
-		ret = @props.day||moment()
-		ret = ret.set hour:hour, minute:min
-		ret  = ret.format('HH:mm')
+	itemCreated:(item_orig)->
+		item = JSON.parse JSON.stringify item_orig
+		l 'created', item
+		item.start=Canvas.pix2moment item.start,
+			Canvas.getHeight @state
+			@props.date
+		item.end=Canvas.pix2moment item.end,
+			Canvas.getHeight @state
+			@props.date
+		l 'created', item
+		@props.onItemCreate(item)
+
+	pix2hour:(pix)->
+		mom=Canvas.pix2moment pix,
+			Canvas.getHeight @state,
+			@props.date
+		mom.format('HH:mm')
 
 	elem: (i)=>
 			foo= L.div
@@ -118,36 +151,37 @@ class Canvas extends Component
 				key:i.id
 				L.div
 					className:'goal-time'
-					'goal ',i.name, i.id
+					i.name||'goal ', i.id
 				L.div
 				L.div
 					className:'picker-date'
 					style: top:'-14px'
-					@get_hour(i.start)
+					@pix2hour(i.start)
 				L.div
 					className:'picker-date'
 					style: bottom:'0px'
-					@get_hour(i.end)
+					@pix2hour(i.end)
 
 	render: ->
 		i = @state.item
 		foo = ''
 		if @state.item
 			foo=@elem(i)
-		ch =@props.children
+		ch =@state.children
 		if ch
 			elems = ( @elem(i) for i in ch)
 		L.div
 			className:'canvas'
-			ref:@ref
+			ref:@state.ref
 			style:
 				backgroundColor:'#efe'
 				#height:'calc(100% - 10px)'
 				margin:'3px'
 				width: if @state.hover then '110px' else'60px'
-			#	height:'300px'
+				#height:'300px'
 				borderRadius:'0.3em'
 				position:'relative'
+				fontSize:'15px'
 				float:'left'
 
 			onMouseMove:	@mMove()
@@ -162,7 +196,7 @@ class Canvas extends Component
 			elems
 			L.div
 				style: margin:'3px'
-				@props.date
+				@props.date.format('dddd')
 			L.div
 				className:'canvas'
 				style:
@@ -176,7 +210,7 @@ class Canvas extends Component
 					style:
 						fontSize:'14px'
 						display: if @state.hover then '' else'none'
-					@get_hour(@state.y)
+					@pix2hour(@state.y)
 
 export default Canvas
 	

@@ -17,11 +17,14 @@ class BaseNode
 	type:'NOTYPE'
 
 	onError: (err)->
-		log.error err.response.status, ',request failed'
-		log.debug err.response.headers
-		log.debug err.response.data
-	
-	netwok: (method)->
+		log.error err
+		if err.response
+			log.error err.response.status, ',request failed'
+			log.debug err.response.headers
+			log.debug err.response.data
+	onSuccess: (resp)->
+		log.info 'request successfull'
+		resp.data
 
 	# Method to get an abstract node of data
 	# and project it to sum subset of props
@@ -34,7 +37,7 @@ class BaseNode
 			else
 				params=id:id
 			axios.get @endpoint, params:params
-			.then (resp) -> resolve resp.data
+			.then (resp) => resolve @onSuccess resp
 			.catch @onError
 
 	set: (id,props)=>
@@ -47,8 +50,8 @@ class BaseNode
 			axios.post @endpoint,
 				id:id
 				props:props
-			.then (resp) -> resolve resp.data
+			.then (resp) => resolve @onSuccess resp
 			.catch @onError
-	# TODO: add update method
+	# TODO: add update metho
 
 module.exports=BaseNode
