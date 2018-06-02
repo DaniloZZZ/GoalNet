@@ -14,6 +14,7 @@ class States(Enum):
 
     HOME = 200
     NOTIF = 300
+    ACTIVITY = 400
     CONTACT = 40
     CONTACT_THANKS = 42
 
