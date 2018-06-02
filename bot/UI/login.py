@@ -1,10 +1,11 @@
 from StateMachine import States
-from frm import handles as h
+from tgflow import handles as h
 from DataBase import db
 
 ps =h.post
 a = h.action
 
+# perform registration check
 def contact_check(i,s,d,role=None):
     c= i.contact
     # check if user sent his own contact
@@ -19,32 +20,13 @@ def contact_check(i,s,d,role=None):
         new_state = States.TG_ERR
     return new_state, d
 
-def set_name(i,s,**d):
-    d['name'] = i.from_user.first_name
-    return d
-
 login_kb= [
     {'Send contact':a(contact_check,react_to='contact'),
      'kwargs':{'request_contact':True}},
     {'<- Back':a(States.START)}
 ]
 
-
 UI={
-    States.START:
-    {'t':
-     h.st(
-         ("Hey %s, nice to meet you! "
-          "I'm a GoalNet bot!"
-          "What would you like to do?"), 
-         'name'),
-     'b':[
-         {'Log in':a(States.TG)},
-         {'Explore GoalNet':a(States.NOT_IMPLEMENTED)},
-         {'Register':a(States.NOT_IMPLEMENTED)}
-     ],
-     'prepare':set_name,
-    },
     States.TG:{
         't':
         h.st(

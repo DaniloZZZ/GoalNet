@@ -1,67 +1,27 @@
 import config
 import log
 import tgflow as tgf
-import schedule, time
 import threading
-
-#from modules import login, student, apply
-from UI import goals, notifs
+from UI import goals, notifs,login, misc
+from StateMachine import States
 from DataBase import db
+
+from telebot import apihelper
+
+apihelper.proxy = {
+    'https':'socks5://localhost:9050'}
+#apihelper.CONNECT_TIMEOUT=20
 
 lg=log.bot.info
 
-tgf.configure(token=config.token,state='start')
-def sch(i):
-	def send():
-		print('sending')
-		tgf.send_state('notif',i.chat.id)
-	#t = threading.Timer(sec, send)
-	#t.start()
-	#s.enter(sec,1,send)
-	#s.run(blocking=False)
-	lg('exit sch')
-	return send
+tgf.configure(token=config.token,state=States.HOME)
 
-def set_sc(i):
-	lg('sceduling every %i min'%int(i.text))
-	j = schedule.every(int(i.text)).minutes.do(sch(i))
-	return 'cancel', {'time':int(i.text), 'job':j}
-
-def cancel(d):
-	lg("cancelling. data",d)
-	schedule.cancel_job(d.get('job'))
-	lg("gobs running",schedule.jobs)
-	return 'start'
-
-UI ={
-    'start':{
-        't':'hello there!',
-        'b':[
-            {'create sch':lambda i: 'get_time'}
-        ]
-    },
-	'get_time':{
-		't':'send me minutes interval',
-		'react':tgf.action(set_sc,react_to='text')
-	},
-	'cancel':{
-			't':tgf.paste('cancel sched %i','time'),
-			'b':[
-					{'cancel':tgf.action(cancel)}
-			]
-
-}
-
-}
+UI = {}
+print(misc.UI)
+UI.update(misc.UI)
+UI.update(login.UI)
 UI.update(goals.UI)
 UI.update(notifs.UI)
-
-def runs():
-	while True:
-		schedule.run_pending()
-		time.sleep(1)
-t = threading.Timer(1,runs)
-t.start()
 
 tgf.start(UI)
 
