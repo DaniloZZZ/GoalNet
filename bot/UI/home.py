@@ -13,10 +13,10 @@ home_kb= [
 ]
 
 def start_notifications_longpoll(i,s,**d):
-    id = d.get('_id') or i.from_user.id
+    uid = d.get('_id') or i.from_user.id
     def clb(notif):
         tgf.send_state(States.NOTIF)
-    notif.start_longpoll(clb)
+    notif.start_longpoll(uid,clb)
     return 0
 
 def get_activities(i,s,**d):
