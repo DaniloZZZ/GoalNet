@@ -7,7 +7,7 @@ def start_longpoll(user_id,clb):
     notif={
         'type':'start',
         'target':'Dummy goal',
-        'start':datetime(),
-        'end':datetime(),
+        'start':datetime.now(),
+        'end':datetime.now(),
     }
     clb(notif)
