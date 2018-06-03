@@ -10,4 +10,4 @@ def start_longpoll(user_id,clb):
         'start':datetime.now(),
         'end':datetime.now(),
     }
-    clb(notif)
+    #clb(notif)

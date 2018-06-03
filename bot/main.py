@@ -13,11 +13,11 @@ from telebot import apihelper
 #apihelper.CONNECT_TIMEOUT=20
 
 lg=log.bot.info
+print('Hello. Starting bot')
 
 tgf.configure(token=config.token,state=States.HOME)
 
 UI = {}
-print(misc.UI)
 UI.update(misc.UI)
 UI.update(home.UI)
 UI.update(login.UI)

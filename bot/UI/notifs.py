@@ -7,9 +7,7 @@ a = h.action
 
 UI={
     States.NOTIF:{
-        't':ps('Hey! Time to do %s',
-               'notif-goal'
-              ),
+        't':'Hey! Time to do great things',
         'b':[
             {'Start pomodoro':a(States.NOT_IMPLEMENTED)},
             {'Pick another goal':a(States.NOT_IMPLEMENTED)},

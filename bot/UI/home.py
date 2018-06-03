@@ -15,9 +15,9 @@ home_kb= [
 def start_notifications_longpoll(i,s,**d):
     uid = d.get('_id') or i.from_user.id
     def clb(notif):
-        tgf.send_state(States.NOTIF)
+        tgf.send_state(States.NOTIF, uid)
     notif.start_longpoll(uid,clb)
-    return 0
+    return {'notif_started':True}
 
 def get_activities(i,s,**d):
     # TODO: use api to get all user's scheduled activities
@@ -33,7 +33,7 @@ UI={
     States.HOME:{
         't':'Welcome, buddy. Wanna stay super-productive?',
         'b':[
-            {'Start activity':a(States.ACTIVITY)},
+            {'Start activity':a(States.ACTIVITY,update_msg=False)},
             {'View Stats':a(States.NOT_IMPLEMENTED)},
             {'Add new goal':a(States.NOT_IMPLEMENTED)},
             ],
