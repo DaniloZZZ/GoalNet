@@ -11,16 +11,10 @@ Direction of further devel:
 
 Dir structure is like:
 
-Name
+	Name
+	├── client.coffee #api for web
+	├── server.coffee #functions of server
+	├── Schema.js
+	├── GraphQL.js
+	└── desc.md
 
-	L_ schema.yaml
-
-	L_ client.coffee #api for web
-
-	L_ server.coffee #functions of server
-
-	L_ Schema.js
-
-	L_ GraphQL.js
-
-	L_ desc.md
