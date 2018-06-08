@@ -1,0 +1,5 @@
+# base schem adds parent prop here
+# parent is node to what comment is
+text: str
+date: date
+author: oid

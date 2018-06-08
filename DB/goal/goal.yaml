@@ -1,0 +1,11 @@
+# base schem adds parent prop here
+# parent is user
+
+title: str
+desc: str
+done: bool
+# should search for parent id to get this
+#
+# sched: [oid] #Schedule
+# comments: [oid] # Comments
+# stats: [oid] #Stats

@@ -1,0 +1,6 @@
+# base schem adds parent prop here
+# parent is User
+type:   str
+start:  date
+end:    date
+activity: str
