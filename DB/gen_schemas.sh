@@ -2,9 +2,11 @@
 
 # for every subfolfer of .
 ## this will fail on whitespaces!
-## TODO: fix witespaces fail
-importstring="var mongoose=require('mongoose');\n"
+importstring="var mongoose=require('mongoose');\n
+var baseSchem = require('./baseSchem.js')\n"
+## TODO: add baseSchem optional
 compilestring=""
+## TODO: fix witespaces fail
 for D in $(find . -type d)
 do
 # for every .yaml in subfolder
@@ -22,8 +24,13 @@ do
 # save it in this subdir at the same name
 			echo "$file" > $D/$name.js
 			jsfile=${y%%yaml}js
-			importstring=$importstring"var "$name"Schem =require(\"$jsfile\");\n"
-			compilestring=$compilestring"\n $name:mongoose.model('$name',"$name"Schem),"
+			importstring=" $importstring 
+			var "$name"Schem = require(\"$jsfile\");
+			\n"
+			compilestring="$compilestring
+			\n $name:mongoose.model('$name',
+			Object.assign("$name"Schem,baseSchem)),"
+			## TODO: make baseSchem optional
 
 		else
 			echo "No yaml file in $D!"
@@ -39,7 +46,10 @@ res=$res"\n\n"$importstring'\n'
 res=$res"\nmodule.exports={$compilestring\n}"
 echo $res > Schem.js
 
+#TODO: ask if overriding, save to diff directory
+
 echo OUTPUT: $res
-echo "Generated the file. testing via nodejs "
+echo "Generated the schemas file. testing via nodejs "
 $(nodejs Schem.js) && echo Good.
+##TODO: auto-generate tests! (the possibile realisation is exiting!)
 
