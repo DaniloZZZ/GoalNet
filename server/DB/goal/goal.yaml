@@ -4,6 +4,7 @@
 title: str
 desc: str
 done: bool
+date: date
 # should search for parent id to get this
 #
 # sched: [oid] #Schedule

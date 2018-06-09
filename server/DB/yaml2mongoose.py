@@ -55,14 +55,8 @@ def dict2mongoose(d,name="test"):
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-%(name)sSchema = Schema(
-%(schema)s
-,{collection: '%(name)s'}
-);
-
-module.exports = {
-    %(name)sSchema:%(name)sSchema,
-}
+module.exports = 
+%(schema)s;
 """%{
     'name':name,
     'schema': dict2json(d,mapper=mongoose_mapper)

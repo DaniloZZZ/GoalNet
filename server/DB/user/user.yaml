@@ -1,0 +1,12 @@
+name: str
+lname: str
+phone: str
+date: date
+login: str
+pass: str
+## These will add later
+#preferences:
+#notify:
+#active: bool
+#type: str
+#public_goals: bool

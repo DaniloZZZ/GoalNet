@@ -4,6 +4,7 @@ mongoose = require('mongoose')
 express = require('express')
 #Schemas= require '../DB/schema/Shemas.js'
 Goal = require './db/GoalNode.coffee'
+User = require './db/UserNode.coffee'
 
 cors = require('cors')
 app = express()
@@ -21,7 +22,8 @@ app.use express.json()
 app.use express.urlencoded()
 # to support URL-encoded bodies
 
-new Goal(app).registerAppEndpoints()
+new Goal(app)
+new User(app)
 
 console.log config.db
 mongoose.connect config.db

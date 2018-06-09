@@ -3,7 +3,7 @@
 # for every subfolfer of .
 ## this will fail on whitespaces!
 importstring="var mongoose=require('mongoose');\n
-var baseSchem = require('./baseSchem.js')\n"
+var baseSchem = require('./baseSchem.js').baseSchem\n"
 ## TODO: add baseSchem optional
 compilestring=""
 ## TODO: fix witespaces fail
@@ -29,7 +29,7 @@ do
 			\n"
 			compilestring="$compilestring
 			\n $name:mongoose.model('$name',
-			Object.assign("$name"Schem,baseSchem)),"
+			mongoose.Schema(Object.assign("$name"Schem,baseSchem))),"
 			## TODO: make baseSchem optional
 
 		else

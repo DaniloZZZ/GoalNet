@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.coffee",
   "scripts": {
-    "test": "mocha --require coffee-script/register \"test/**/*.{js,coffee}\"",
-    "start": "coffee -w server.coffee && nodemon server.js"
+    "test": "mocha --require coffee-script/register \"DB/**/test/**/*.{js,coffee}\"",
+    "start": "NODE_PATH=. coffee -w server.coffee && nodemon server.js"
   },
   "author": "Danil Lykov",
   "license": "GPL-3.0"

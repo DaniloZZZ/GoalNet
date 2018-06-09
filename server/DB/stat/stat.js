@@ -3,17 +3,11 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-statSchema = Schema(
+module.exports = 
 
 {
-"end":Date,
+"activity":String,
 "type":String,
 "start":Date,
-"activity":String,
-}
-,{collection: 'stat'}
-);
-
-module.exports = {
-    statSchema:statSchema,
-}
+"end":Date,
+};

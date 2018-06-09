@@ -3,16 +3,10 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-commentSchema = Schema(
+module.exports = 
 
 {
-"author":Schema.Types.ObjectId,
 "text":String,
+"author":Schema.Types.ObjectId,
 "date":Date,
-}
-,{collection: 'comment'}
-);
-
-module.exports = {
-    commentSchema:commentSchema,
-}
+};

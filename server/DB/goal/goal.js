@@ -3,16 +3,11 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-goalSchema = Schema(
+module.exports = 
 
 {
-"title":String,
 "done":Boolean,
 "desc":String,
-}
-,{collection: 'goal'}
-);
-
-module.exports = {
-    goalSchema:goalSchema,
-}
+"title":String,
+"date":Date,
+};
