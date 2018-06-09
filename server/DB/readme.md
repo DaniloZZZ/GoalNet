@@ -12,7 +12,8 @@ Now dir struct is:
 	├──Schem.js 		# auto-generated file with all schemas
 	├──BaseNode.coffee 	# base server functions for all nodes
 	├──test
-	|    └── baseNode.coffee	# tests for base functions
+	|    └── baseNode.coffee	# tests for base functions, e.g
+	|				# get, set, delete, loggers: onError and onConnect
 	├──foo			# foder of 'foo' object
 	|    ├── fooNode.coffee 	# server functions
 	|    ├── foo.js			# mongo schema
