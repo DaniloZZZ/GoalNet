@@ -1,6 +1,5 @@
 BaseNode = require '../BaseNode.coffee'
 Schemas= require '../Schem.js'
-GoalNode= require './goalNode.coffee'
 
 class GoalNode extends BaseNode
 	path:"/goal"

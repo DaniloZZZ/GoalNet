@@ -61,8 +61,9 @@ class BaseNode
 
 		node.parent={}
 		node.title="hello"
-		node.parent.kind =params.parent.kind
-		node.parent.item =params.parent.id
+		if params.parent
+			node.parent.kind =params.parent.kind
+			node.parent.item =params.parent.id
 		log.info('saving...')
 		node.save()
 			.then (node)=>
@@ -87,7 +88,7 @@ class BaseNode
 			dbcall(req)
 			.then (r)=>
 				res.send r
-				log.debug 'sent response',r
+				log.info 'sent response',r
 			.catch (err)=>
 				res.status 400
 				res.send BaseNode.onError err

@@ -16,7 +16,7 @@ mongoCred=process.env.MONGO_CREDENTIALS
 mongoose.connect "mongodb://"+mongoCred+
 	"@lykov.tech:27017/goalnet"
 goal = new GoalNode(app)
-port = 3035
+port = 3030
 server=null
 start=()->
 	server = app.listen port, ->
@@ -27,7 +27,7 @@ describe 'goalNode', ->
 	before start
 	after ()->server.close()
 	goal_= {}
-	endpoint = "http://localhost:"+port
+	endpoint = "http://lykov.tech:"+port
 	it 'should have an appropriate endpoint',->
 		goal.path.should.equal '/goal'
 
@@ -36,31 +36,13 @@ describe 'goalNode', ->
 			endpoint+'/goal/',
 			props:
 				title:"a test goal"
-				desc:" some arbitrary descdlkfjasl
-				dfjadslflkj
-				jflasdkjflasjd
-				jfdlkasdfasldf
-				sadkjflajdsf
-				asdfjasldfku41lj;kr2
-				asdfjasdf
-				asdfhadslf'adskflaskdf
-				adsfjlkadsf
-				dj'fklad
-				fkladsjf
-				asdfkjasdfkjdaskfjladsf
-				adsfaskdf243k;adsf
-				adfhkads
-				f4542reqe
-				asdfjkasd
-				fasdjkfasdjfsdflkdfas\fadsjfjadslfjsfdsadwqe4
-				fdsahfkjadsfads
-				fdsafjhdakkh"
+				desc:"some arbitrary descdlkfjasl"
 				done: false
 		)
 		.then( (resp)->
 			logger.debug resp.data
 			goal_=resp.data
-		).catch logger.error
+		).catch (err)=> logger.error err
 
 	it 'should get goal', (done)->
 		axios.get(
@@ -71,7 +53,7 @@ describe 'goalNode', ->
 		.then (resp)->
 			logger.debug resp.data
 			done()
-		.catch logger.error
+		.catch (err)=> logger.error err
 		return
 
 	it 'should delete goal', (done)->
@@ -83,7 +65,7 @@ describe 'goalNode', ->
 		.then (resp)->
 			logger.debug resp.data
 			done()
-		.catch logger.error
+		.catch (err)=> logger.error err
 		return
 
 

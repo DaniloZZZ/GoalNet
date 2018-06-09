@@ -3,8 +3,8 @@ config = require './config-server.js'
 mongoose = require('mongoose')
 express = require('express')
 #Schemas= require '../DB/schema/Shemas.js'
-Goal = require './db/GoalNode.coffee'
-User = require './db/UserNode.coffee'
+Goal = require './DB/goal/goalNode.coffee'
+#User = require './db/UserNode.coffee'
 
 cors = require('cors')
 app = express()
@@ -23,11 +23,11 @@ app.use express.urlencoded()
 # to support URL-encoded bodies
 
 new Goal(app)
-new User(app)
+#new User(app)
 
 console.log config.db
 mongoose.connect config.db
 port = 3030
 app.listen port, ->
-	console.log 'Example app listening on port ' + port + '!'
+	console.log 'Example app ;listening on port ' + port + '!'
 	return
