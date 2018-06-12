@@ -17,10 +17,10 @@ module.exports={
 			resp.data
 		.catch (err)=> logger.error err
 
-	set:(node,params)->()->
+	set:(node,data)->()->
 		axios.post(
 			endpoint+node.path
-			props:params
+			data
 		)
 		.then (resp)->
 			logger.debug resp.data

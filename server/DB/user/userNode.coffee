@@ -22,6 +22,7 @@ class UserNode extends BaseNode
 	
 	get_goals:(req)->
 		id=req.query.id
+		log.info 'finding goals of ',id
 		Schemas.goal.find(
 			'parent.item':id
 		)
