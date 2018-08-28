@@ -41,7 +41,7 @@ class Goals extends Component {
 	get_user_goals(id){
 		id= id||this.state.id
 		console.log('getting goals');
-		axios.get(config.server+'/usergoals/',
+		axios.get(config.server+'/user/goals/',
 			{
 				params:{id:id}
 			},

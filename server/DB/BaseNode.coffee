@@ -50,7 +50,7 @@ class BaseNode
 		log.debug('finding...')
 		@schema.find params
 			.then (node)->
-				log.info 'db returned: ',node
+				log.info "db returned for params#{JSON.stringify(params)}: ",node
 				return node
 
 	set: (req)=>
@@ -58,13 +58,10 @@ class BaseNode
 		params = @setterParams req
 		newProps=params.props ||{}
 		node = new @schema newProps
-
-		node.parent={}
-		node.title="hello"
 		if params.parent
 			node.parent.kind =params.parent.kind
 			node.parent.item =params.parent.id
-		log.info('saving...')
+		log.info("saving #{@kind}...")
 		node.save()
 			.then (node)=>
 				log.info 'Node saved. '

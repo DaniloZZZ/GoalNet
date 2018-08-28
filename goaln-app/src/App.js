@@ -56,8 +56,7 @@ class App extends Component {
 		<div className='main'>
 			<Switch>
 				<Route path='/home' component={Goals}/>
-				<Route path='/newgoal' component={NewGoal}>
-				</Route>
+				<Route path='/newgoal' component={NewGoal}/>
 				<Route path='/user/:id' component={Goals}/>
 				<Route path='/user/'>
 					user

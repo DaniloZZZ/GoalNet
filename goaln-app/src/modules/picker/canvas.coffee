@@ -151,7 +151,7 @@ class Canvas extends Component
 				key:i.id
 				L.div
 					className:'goal-time'
-					i.name||'goal ', i.id
+					i.goal_title||'goal ', i.id
 				L.div
 				L.div
 					className:'picker-date'

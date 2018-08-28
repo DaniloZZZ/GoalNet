@@ -55,6 +55,7 @@ class BaseNode
 		# For mor fast updating use update(unimpl)
 		new Promise (resolve,reject)=>
 			console.log 'setting(saving),',id
+			console.log 'props',props
 			console.log 'request for',@kind,' id ',id
 			axios.post @endpoint,
 				id:id
