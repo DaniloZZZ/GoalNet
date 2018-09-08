@@ -15,7 +15,7 @@ from telebot import apihelper
 lg=log.bot.info
 print('Hello. Starting bot')
 
-tgf.configure(token=config.token,state=States.HOME)
+tgf.configure(token=config.token,state=States.START)
 
 UI = {}
 UI.update(misc.UI)

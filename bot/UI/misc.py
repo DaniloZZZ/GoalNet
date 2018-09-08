@@ -1,6 +1,6 @@
 from StateMachine import States
 from tgflow import handles as h
-from tgflow .coffee_ui import CoffeeUI
+from tgflow.coffee_ui import CoffeeUI
 
 ps =h.post
 a = h.action

@@ -12,8 +12,12 @@ class States(Enum):
     NOT_REG = 13
     GMAIL = 121
 
+    GOAL = 100
+
     HOME = 200
     NOTIF = 300
+    WORKING = 310
+    POMODORO = 330
     ACTIVITY = 400
     CONTACT = 40
     CONTACT_THANKS = 42
