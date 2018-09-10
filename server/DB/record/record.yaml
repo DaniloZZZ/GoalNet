@@ -1,0 +1,4 @@
+type: str
+content: mixed
+command: str
+date: date
