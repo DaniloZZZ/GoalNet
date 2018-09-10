@@ -1,6 +1,8 @@
 package main
 import (
 	"log"
+	"fmt"
+	"bytes"
 	"time"
 )
 
@@ -30,29 +32,47 @@ func (s Getter)Apply( i Link) Goal{
 	log.Println("Here we pretend some api call")
 	goal := Goal{
 		Id : "1231",
-		Name : "Test Goal",
+		Title : "Test Goal",
 	}
 	return goal
 }
 
 type Goal struct{
-	Name string
-	Id string
+	Title string
+	Id string`json:_id`
+	Desc string
+	Done bool
 }
 func (u Goal)String() string{
-	return "<"+u.Name+ " goal@ "+ u.Id +">"
+	return "<"+u.Title+ " goal@ "+ u.Id +">"
 }
 
 type Record struct{
-	Name string
+	Command string
 	Type string
-	Id string
+	Content map[string]string
+	Id string`json:_id`
+	Date time.Time
+	UserId string
+}
+func createKeyValuePairs(m map[string]string) string {
+	b := new(bytes.Buffer)
+	for key, value := range m {
+		fmt.Fprintf(b, "%s=\"%s\"\n", key, value)
+	}
+	return b.String()
+}
+func (u Record)String() string{
+	return "<"+u.Type+" record@"+u.Id+u.Command+" content:\n"+
+	createKeyValuePairs(u.Content)+">"
 }
 
 type Notification struct{
 	Medium string
 	Time time.Time
-	Content string
+	// this string is used to create a (Notif,Goal)->notif
+	ResolveRules string
+	Content map[string]string
 	AppId string
 	Id string
 }

@@ -15,11 +15,15 @@ type callback struct{
 }
 
 func (p callback) ServeHTTP(w http.ResponseWriter, r *http.Request){
+	// This is the main function. Parse POST action,
+	// then retrieve Action to Notification rules
+	// apply them, and schedule the notification
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request body",
 		http.StatusInternalServerError)
 	}
+	// Action is Goal + Record
 	rec,goal,rec2notif := Parse_Action(string(body))
 	rec.Save()
 	notif := rec2notif.Apply(rec,goal)
@@ -37,10 +41,9 @@ func main(){
 	clb := callback{
 		port : "3200",
 	}
-	log.Print("Starting record server on port ",clb.port)
+	log.Print("Waiting for POST with Action on http://localhost:",clb.port)
 	go func(){
-		err := http.ListenAndServe(
-			":"+clb.port,clb)
+		err := http.ListenAndServe(":"+clb.port,clb)
 		if err!=nil{
 			fmt.Println("Error!")
 			fmt.Println(err)
