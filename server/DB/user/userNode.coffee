@@ -17,9 +17,25 @@ class UserNode extends BaseNode
 			null
 		@router.get '/sched', @genCallbackFun @get_sched
 		@router.get '/goals', @genCallbackFun @get_goals
+		@router.get '/records', @genCallbackFun @get_records
 
 	#setterParams:(req)->
-	
+	get_records:(req)->
+		id=req.query.id
+		filter = req.query.filter
+		log.warn 'filter', filter
+		log.info 'finding records of ',id
+		dic = {
+				...{'parent.item':id},
+				...JSON.parse(filter)
+			}
+		log.warn dic
+		Schemas.record.find(
+			dic
+		).sort( date:-1 ).limit(3)
+		.then (records)->
+			log.debug records
+			return records
 	get_goals:(req)->
 		id=req.query.id
 		log.info 'finding goals of ',id
@@ -40,17 +56,15 @@ class UserNode extends BaseNode
 				res = []
 				# for each goal of user 
 				for goal in goals
-					log.debug goal
 					# find schedule of the goal
-					Schemas.sched.find(
+					s = await Schemas.schedule.find(
 						'parent.item':goal._id
 					)
-					.then (s)->
-						# and concat it into result
-						res= res.concat(s)
-						if res.length==goals.length
+					# and concat it into result
+					log.info('atom got',s)
+					res= res.concat(s)
 							# TODO: pass it through condition checker
-							log.info 'got sched for user',res
-							resolve res
+					log.info "got scheds for goal#{goal._id}",res
+				resolve res
 
 module.exports=UserNode

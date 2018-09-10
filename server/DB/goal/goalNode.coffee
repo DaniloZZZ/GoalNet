@@ -1,5 +1,8 @@
 BaseNode = require '../BaseNode.coffee'
 Schemas= require '../Schem.js'
+logger = require 'log4js'
+log = logger.getLogger('GoalNode')
+log.level='debug'
 
 class GoalNode extends BaseNode
 	path:"/goal"
@@ -16,6 +19,11 @@ class GoalNode extends BaseNode
 			child:'goal_ids'
 
 	#setterParams:(req)->
+	@get_by_id: (id) ->
+		Schemas.goal.find _id:id
+			.then (node)->
+				log.info 'db returned: ',node
+				return node
 	
 	@add_comment:(req)->
 		q = req.query
