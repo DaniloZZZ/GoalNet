@@ -45,7 +45,8 @@ def mongoose_mapper(val):
         'oid':  'Schema.Types.ObjectId',
         'str':  'String',
         'int':  'Number',
-        'bool': 'Boolean'
+        'bool': 'Boolean',
+        'mixed':  'Schema.Types.Mixed',
     }
     return table.get(val)
 
