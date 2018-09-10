@@ -1,10 +1,12 @@
-from StateMachine import States
+from multiprocessing import Process
+import requests,json
 import tgflow as tgf
+
+from StateMachine import States
 from tgflow import handles as h
 from DataBase import db
 import notif
-from multiprocessing import Process
-import requests,json
+from .notifs import start_pomodoro
 
 ps =h.post
 a = h.action
@@ -24,10 +26,10 @@ def start_notifications_longpoll(i,s,**d):
     def clb(notif):
         print("**----\ngot notification",notif)
         event = notif['events'][0]
-        data = event['data']
+        data =event['data']
         # TODO: make a public method in tgf for this
         tgf.Data.get(uid,{}).update({
-            'GoalName':data
+            'NotifData':data
         })
         tgf.send_state(States.NOTIF, uid)
     def func():
@@ -58,21 +60,26 @@ def get_activities(i,s,**d):
         print(r.text)
         goals = json.loads(r.text)
         goal_buttons = []
-        print(tgf.Data)
-        for goal in goals:
-            def f(i,s,**d):
-                return States.GOAL,{'GoalName':goal['title']}
-            action = a(f,update_msg=False)
+        ts  = [goal['title'] for goal in goals]
+        for t in ts:
+            action = a(
+                lambda:
+                (States.GOAL,
+                {'GoalName':t})
+            ,update_msg=False)
             goal_buttons.append(
-                {goal['title']:action}
+                {t:action}
             )
+        goal_buttons = [
+            {t:a(
+                lambda:
+                (States.GOAL,
+                {'GoalName':t})
+            )} for t in ts]
         return  {'GoalButtons':goal_buttons}
     else:
         print("!!**!!\n ERROR",r.status_code)
-        return States.ERROR
-
-    d['activs']=acts
-    return d
+        return {}
 
 UI={
     States.HOME:{
@@ -100,7 +107,7 @@ UI={
     States.GOAL:{
         't':h.st("You are about to work on Goal %s",'GoalName'),
         'b':[
-            {'Start pomodoro':a(States.POMODORO)}
+            {'Start pomodoro':a(start_pomodoro)}
         ]
         }
 }
