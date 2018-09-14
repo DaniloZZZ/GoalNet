@@ -18,9 +18,9 @@ def start_pomodoro(s,d):
                 "Title":d.get('GoalName','GoalStPomodoro')
             },
             'Record':{
-                'Name':'Pomodoro_Start',
+                'Command':'Pomodoro_Start',
+                'Type': "pomodoro",
                 'Content':{
-                    'type':'pomodoro',
                     'secret':'SecRet'
                 }
             }
@@ -30,6 +30,29 @@ def start_pomodoro(s,d):
         return States.POMODORO
     else:
         return States.ERROR
+
+def stop_pomodoro(s,d):
+    print("Stopping pomodoro")
+    r = requests.post(
+        notify_api,
+        data=json.dumps({
+            'Goal':{
+                "Title":d.get('GoalName','GoalStPomodoro')
+            },
+            'Record':{
+                'Command':'Pomodoro_Stop',
+                'Type': "pomodoro",
+                'Content':{
+                    'type':'pomodoro',
+                    'secret':'End this shit'
+                }
+            }
+        })
+    )
+    if r.status_code==200:
+        return States.ACTIVITY
+    else:
+        return States.ERROR
 def parse_notif(i,s,**d):
     notif = d.get('NotifData',{})
     print(notif)
@@ -37,7 +60,7 @@ def parse_notif(i,s,**d):
     text = 'Some other notif'
     if t=='Pomodoro_Start':
         text = 'Hey! time to do %s'%notif.get('GoalName')
-    elif t=='Pomodoro_End':
+    elif t=='Pomodoro_Relax':
         text = 'Hey! take an effective rest'
 
     d.update({'NotifText':text})
@@ -56,7 +79,7 @@ UI={
     States.POMODORO:{
         't':h.st("WORKING on %s :)",'GoalName'),
         'b':[
-            {'Stop':a(States.NOT_IMPLEMENTED)}
+            {'Stop':a(stop_pomodoro,update_msg=False)}
         ],
     }
 }
