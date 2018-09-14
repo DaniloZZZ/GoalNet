@@ -63,7 +63,7 @@ func createKeyValuePairs(m map[string]string) string {
 	return b.String()
 }
 func (u Record)String() string{
-	return "<"+u.Type+" record@"+u.Id+u.Command+" content:\n"+
+	return "<record "+u.Command+" //"+u.Id+u.Command+" content:\n"+
 	createKeyValuePairs(u.Content)+">"
 }
 
@@ -75,9 +75,10 @@ type Notification struct{
 	Content map[string]string
 	AppId string
 	Id string
+	UserId string
 }
 func (u Notification)String() string{
 	const layout = "Jan 2, 18:45"
-	return "<"+u.Medium+" notif @ " +
+	return "<"+u.Medium+" notif"+u.Content["Type"]+" @ " +
 	u.Time.Format(layout) +">"
 }

@@ -28,15 +28,12 @@ func (me Rec2Notif) Load(l Link) Rec2Notif{
 	// In futyure, you can load custom rec2notif 
 	// depending on link ref provided in POST req
 	log.Println("Loading rec2notif")
-	tim := time.Now().Add(3*time.Second)
-	id := "5adcefbaed9d970d42d33d65"
 	apply := func (rec Record,g Goal) Notification {
-			log.Println("Mapper hello")
-			log.Println("record content.type",rec.Content["type"])
-			log.Println("record name",rec.Command)
+			log.Println("Record content.type",rec.Content["type"])
+			log.Println("Record Command",rec.Command)
 			if rec.Command=="Pomodoro_Start"{
-				status := Get_Pomodoro_User(id)
-				log.Print("----\nSTATUS\n",status)
+				tim := time.Now().Add(15*time.Second)
+				//status := Get_Pomodoro_User(id)
 				n := Notification{
 					Medium : "telegram",
 					Content : map[string]string{
@@ -44,12 +41,28 @@ func (me Rec2Notif) Load(l Link) Rec2Notif{
 						"GoalName":g.Title,
 					},
 					ResolveRules: "at",
-					Time : time.Now().Add(10*time.Second),
+					Time : tim,
 					AppId : "0",
 					Id : "1231",
 				}
-			return n
-			}else {
+				return n
+			}else if rec.Command=="Pomodoro_End" {
+				tim := time.Now().Add(8*time.Second)
+				n := Notification{
+					Medium : "telegram",
+					Content : map[string]string{
+						"Type":"Pomodoro_Start",
+						"GoalName":g.Title,
+					},
+					ResolveRules: "at",
+					Time : tim,
+					AppId : "0",
+					Id : "1231",
+					UserId: rec.UserId,
+				}
+				return n
+			}else if rec.Command=="Pomodoro_Stop"{
+				tim := time.Now()
 				n := Notification{
 					Medium : "telegram",
 					Content : map[string]string{
@@ -60,8 +73,24 @@ func (me Rec2Notif) Load(l Link) Rec2Notif{
 					Time : tim,
 					AppId : "0",
 					Id : "1231",
+					UserId: rec.UserId,
 				}
-			return n
+				return n
+			}else{
+				tim := time.Now()
+				n := Notification{
+					Medium : "telegram",
+					Content : map[string]string{
+						"Type":"Pomodoro_None",
+						"GoalName":g.Title,
+					},
+					ResolveRules: "at",
+					Time : tim,
+					AppId : "0",
+					Id : "1231",
+					UserId: rec.UserId,
+				}
+				return n
 			}
 		}
 	me.Apply = apply
@@ -107,7 +136,7 @@ func (me Record) Save ()bool{
 	if err!=nil{
 		log.Print("!!\nALARM\n",err)
 	}
-	log.Println("**\n**\n -->>")
+	log.Println("|^|\n**Saving record")
 	log.Println(string(json))
 	resp, err:= http.Post(
 		server_endpoint+"/record",
@@ -146,7 +175,7 @@ func Get_Pomodoro_User(id string) string{
 		log.Println("COMM\n",Comm)
 		if Comm=="Pomodoro_Start"{
 			return "work"
-		}else if Comm=="Pomodoro_Done"{
+		}else if Comm=="Pomodoro_End"{
 			return "relax"
 		}else{
 			return "no"

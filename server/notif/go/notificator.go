@@ -18,7 +18,7 @@ type NotificationIntent struct{
 	Resolve func() (bool)
 	NextNotif func(Notification) (Notification,bool)
 }
-var CheckDelay=2000
+var CheckDelay=1000
 
 var storage map[string]NotificationIntent
 // This functions saves a NotificationIntent depending on
@@ -43,10 +43,38 @@ func ScheduleNotification(
 				log.Print("Resolving",notif)
 				return dosend
 			},
-			NextNotif : func(Notification) (Notification,bool){
-				schedule_next:=false
-				next := Notification{}
-				return next , schedule_next
+			NextNotif : func(prev_notif Notification) (Notification,bool){
+
+				id := "5adcefbaed9d970d42d33d65"
+				status:=Get_Pomodoro_User(id)
+				log.Print("\n---STATUS\n",status)
+				var command string
+				schedule_next:=true
+				if status=="work"{
+					command="Pomodoro_End"
+				}else if status =="relax"{
+					command="Pomodoro_Start"
+				}else{
+					schedule_next = false
+				}
+				if schedule_next{
+
+					rec:=Record{
+						Command : command,
+						Type : "pomodoro",
+						UserId : notif.UserId, // Preserve uid
+						// in chained notifications
+					}
+					goal,rec2notif := fetchRec2N(rec)
+					//These are programmatically emitted recors
+					// Probably should configure if saving
+					rec.Save()
+					next_notif := rec2notif.Apply(rec,goal)
+					return next_notif , schedule_next
+				}else{
+					return Notification{},false
+				}
+
 			},
 		}
 		// Saving the intent to storage. 
@@ -79,7 +107,7 @@ func StartNotificator(){
 				// Send the notification to all who
 				// subscribed to "Medium:AppId" category
 				n := intent.Notif
-				log.Print("sending",n)
+				log.Print("==>>\nsending notification",n)
 				manager.Publish(
 					n.Medium +":"+ n.AppId ,
 					n.Content,
@@ -88,6 +116,7 @@ func StartNotificator(){
 				next_notif, schedule_next :=
 				intent.NextNotif(intent.Notif)
 				if schedule_next{
+					log.Println("\n **NewNotif**\n",next_notif)
 					ScheduleNotification(next_notif,intent.Goal)
 				}
 			}
