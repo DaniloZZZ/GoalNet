@@ -6,6 +6,8 @@ import zmq, os, time
 import json
 from pprint import pprint
 
+import multiprocessing as prc
+from ..utils import themify, dethemify, get_network_config
 
 def themify(topic,msg):
     """ json encode the message and prepend the topic """
@@ -21,8 +23,7 @@ def filter_action(action):
         return None
     if not action.get('user_id'):
         return None
-    else:
-        return action
+    return action
 
 def MUX(my_name, network_config):
     print("MUX is listening  named as:%s"%(my_name))
@@ -48,4 +49,16 @@ def MUX(my_name, network_config):
             sink.send_string(themify('module',action))
         else:
             print("action forbidden")
+
+def start_mux():
+    netconf = get_network_config()
+    p = prc.Process(target=MUX,args=('MUX',netconf),name='mux')
+    p.start()
+
+def main():
+    print("Starting MUX node...")
+    start_mux()
+
+if __name__=='__main__':
+    main()
 
