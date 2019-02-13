@@ -41,6 +41,7 @@ def main():
     ctx = zmq.Context()
     s = ctx.socket(zmq.REP)
     s.bind(addr)
+    print("config server listening on",addr)
     while True:
         request = s.recv_string()
         _print("got request", request)
