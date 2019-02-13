@@ -1,6 +1,9 @@
 import zmq
 import multiprocessing.dummy as thread
 
+def _print(*args):
+    print(">netconnn>",*args)
+
 class ConnectorNetwork:
     def __init__(self,netconf,appid,name):
         self.netconf = netconf
@@ -22,9 +25,16 @@ class ConnectorNetwork:
 
     def listen_for_notif(self, callback):
         def listener(callback):
+            _print("Listening DMX on %s ..."%self.myaddr)
             while True:
                 notif = self.notif_sock.recv_json()
-                response = callback(notif)
+                try:
+                    response = callback(notif)
+                except Exception as e:
+                    _print("ERROR in notif callback. sending fail")
+                    self.notif_sock.send_string("FAIL")
+                    raise e
+
                 self.notif_sock.send_string(response)
 
         p = thread.Process(target=listener, args=(callback,),
