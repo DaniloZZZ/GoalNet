@@ -5,17 +5,11 @@ Created by Danil Lykov @danlkv on 13/02/19
 import zmq, os, time
 import json
 from pprint import pprint
+import multiprocessing as prc
 
-def themify(topic,msg):
-    """ json encode the message and prepend the topic """
-    return topic + ' ' + json.dumps(msg)
-
-def dethemify(topicmsg):
-    """ Inverse of themify() """
-    json0 = topicmsg.find('{')
-    topic = topicmsg[0:json0].strip()
-    msg = json.loads(topicmsg[json0:])
-    return topic, msg
+from ..utils import themify, dethemify, get_network_config
+def _print(*args):
+    print(">EchoModule>",*args)
 
 class EchoModule:
     """
@@ -25,6 +19,7 @@ class EchoModule:
         #TODO: make a base class of module that will use netconf to get provider
         self.source = self._get_mux_socket(netconf)
         self.sink = self._get_dmx_socket(netconf)
+        self.name = name
 
     def _get_dmx_socket(self,netconf):
         ctx = zmq.Context()
@@ -48,12 +43,26 @@ class EchoModule:
         topic,msg = dethemify(raw)
         return msg
 
-    def start(self):
+    def run_function(self):
+        _print("running...")
         while True:
             msg = self._recv()
-            print("echo got action")
+            _print("got action")
+            #time.sleep(0.01)
             self.sink.send_json(msg)
+
+    def start(self):
+        process = prc.Process(target=self.run_function, name=self.name)
+        process.start()
 
 def launch_echo(name,netconf):
     echom = EchoModule(netconf,name=name)
-    echom.start()
+    echom.run_function()
+
+def main():
+    print("Starting echo module node...")
+    netconf = get_network_config()
+    launch_echo('echo',netconf)
+
+if __name__=='__main__':
+    main()

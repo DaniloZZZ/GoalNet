@@ -6,6 +6,9 @@ import zmq, os, time
 import json
 from pprint import pprint
 
+import multiprocessing as prc
+from ..utils import themify, dethemify, get_network_config
+
 def DMX(my_name, network_config):
     print("DMX is listening named as:%s"%my_name)
     source_addr = network_config.get_address(my_name)
@@ -35,3 +38,15 @@ def DMX(my_name, network_config):
             print("getting answer %s connector"%name)
             answer = socket.recv_string()
             print('dmx %s answ'%name,answer)
+
+def start_dmx():
+    netconf = get_network_config()
+    p = prc.Process(target=DMX,args=('DMX',netconf),name='dmx')
+    p.start()
+
+def main():
+    print("Starting DMX node...")
+    start_dmx()
+
+if __name__=='__main__':
+    main()
