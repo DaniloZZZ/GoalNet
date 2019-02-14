@@ -52,7 +52,7 @@ class ConsoleConnector:
 
     def send(self,text):
         msg = {
-            'text':text,
+            'content':text,
             'user_id':1,
             'appid':self.appid
         }
