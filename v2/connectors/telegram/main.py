@@ -27,13 +27,20 @@ def bot(netconf):
 
     def handle_notif(notif):
         str_notif = json.dumps(notif)
-        user_id = notif['user_id']
+        user_id = str(notif['user_id'])
         tgid = db.get_tg_id(user_id)
         _print("got notif:",str_notif)
         message = "Got new notif of type %s. Content: %s"%(
                 notif.get('type'),notif.get('content')
                 )
-        tgf.send_raw(message, tgid)
+        if not tgid:
+            print("User id %s has no telegram log"%user_id)
+            return "FAIL"
+        try:
+            tgf.send_raw(message, tgid)
+        except Exception as e:
+            _print("Notif was not sent",e)
+            return "FAIL"
         return 'OK'
 
     net.listen_for_notif(handle_notif)
