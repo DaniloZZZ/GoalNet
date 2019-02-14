@@ -57,7 +57,10 @@ class Module:
 
     def _send(self,notif):
         if notif:
+            self._print('sending',notif)
             self.sink.send_json(notif)
+        else:
+            self._print('called send on',notif)
 
     def handle_action(self,msg):
         self._print("Do not use base class per se")
