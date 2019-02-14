@@ -53,13 +53,20 @@ class Module:
         while True:
             msg = self._recv()
             notif = self.handle_action(msg)
-            if notif:
-                self.sink.send_json(notif)
+            self._send(notif)
+
+    def _send(self,notif):
+        if notif:
+            self.sink.send_json(notif)
+
     def handle_action(self,msg):
         self._print("Do not use base class per se")
         return None
 
     def start(self):
+        self.run_function()
+
+    def start_parallel(self):
         process = prc.Process(target=self.run_function, name=self.name)
         process.start()
 
