@@ -8,7 +8,7 @@ from pprint import pprint
 import multiprocessing as prc
 
 from ..utils import themify, dethemify, get_network_config
-from core.modules.Module import Module
+from core.modules.BaseModule import Module
 
 
 class EchoModule(Module):
