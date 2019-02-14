@@ -8,11 +8,15 @@ A module for time-tracking technique
 import zmq, os, time
 import json
 from pprint import pprint
-import multiprocessing.dummy as thread
 
 from utils__ import themify, dethemify, get_network_config
 from BaseModule import Module
+#---
+import sched
+from notif_sched import CallScheduler
+import notif_types as tps
 from enum import Enum
+
 
 class States(Enum):
     none=0
@@ -21,54 +25,59 @@ class States(Enum):
     relax_end=3
     work_end=4
 
-def threadify(f,args=()):
-    p = thread.Process(target=f,args=args)
-    p.start()
-
-class NotifScheduler:
-    def __init__(self,callback):
-        self.queue = []
-        self.callback = callback
-
-    def _collect_due(self,intents=[]):
-        t = time.time()
-
-        intents = [ i for i in self.queue if i[0]<t]
-        self.queue = [ i for i in self.queue
-                if i not in intents]
-        return intents
-
-    def schedule(self, notif, time):
-        self.queue.append((time,notif))
-        print("queue",self.queue)
-
-    def run(self):
-        ts = time.time()
-        while True:
-            intents = self._collect_due()
-            if intents:
-                print("intents to resolve",intents)
-                for intent in intents:
-                    self.callback(intent[1])
-            time.sleep(0.1)
-
-    def start(self):
-        print("NotifScheduler running...")
-        threadify(self.run)
-
 class PomodoroModule(Module):
     def __init__(self,netconf,name='pomodoro'):
         super().__init__(netconf,name=name)
         self.work_time = 4
         self.relax_time = 2
         self.states = {}
-        self.sched = NotifScheduler(self.resolve_notif)
+        self.sched = CallScheduler()
         self.sched.start()
 
     def get_state(self,uid):
         return self.states.get(uid)
     def set_state(self,uid,state):
         self.states[uid]=state
+
+    ###--TODO: wrap this to PomodoroUsr(userid)
+    # TODO: figure out the internal structure and make this 
+    # mode beautiful
+    def _start_work(self, user_id):
+        self.set_state(user_id,States.work)
+        self._send(
+                tps.WorkStart(user_id).data
+                )
+        self.sched.enter(self.work_time, self._on_end_work, (user_id,))
+
+    def _start_relax(self, user_id):
+        self.set_state(user_id,States.relax)
+        self._send(
+                tps.RelaxStart(user_id).data
+                )
+        self.sched.enter(self.relax_time, self._on_end_relax, (user_id,))
+
+
+    def _on_end_work(self,user_id):
+        self.set_state(user_id,States.work_end)
+        auto_continue = True
+        ##
+        self._send(
+             tps.WorkEnd(user_id).data
+                )
+        if auto_continue:
+            self._start_relax(user_id)
+
+
+    def _on_end_relax(self,user_id):
+        self.set_state(user_id,States.relax_end)
+        auto_continue = True
+        ##
+        self._send(
+                tps.RelaxEnd(user_id).data
+                )
+        if auto_continue:
+            self._start_work(user_id)
+    ###--
 
     def handle_action(self,action):
         user_id = action['user_id']
@@ -80,22 +89,13 @@ class PomodoroModule(Module):
         if state == action:
             self._print("requested state is equal to current")
             return
+
+        ###-- This can be more beautiful
         if action==States.work:
-            self.set_state(user_id,States.work)
-            notif = {
-                    'content':'Time to relax',
-                    'type':'pomodoro',
-                    'user_id':user_id,
-                    }
-            self.delayed_send(notif,self.work_time)
+            self._start_work(user_id)
         if action==States.relax:
-            self.set_state(user_id,States.relax)
-            notif = {
-                    'content':'Time to work',
-                    'type':'pomodoro',
-                    'user_id':user_id,
-                    }
-            self.delayed_send(notif,self.relax_time)
+            self._start_relax(user_id)
+        ###--
 
 
     def resolve_notif(self,notif):

@@ -1,33 +1,39 @@
 """
 Created by Danil Lykov @danlkv on 14/02/19
 """
-from collections import UserDict
+#from collections import UserDict #not json serializable
+import json
+from userdict import UserDict
 class BaseNotif(UserDict):
     def __init__(self,uid):
         super().__init__()
         self.data['user_id']=uid
 
-class PomodoroNotif(BaseNotif)
+class PomodoroNotif(BaseNotif):
     def __init__(self,uid):
-        super().__init__()
+        super().__init__(uid)
         self.data['type'] = 'pomodoro'
 
-class WorkStart(BaseNotif):
+class WorkStart(PomodoroNotif):
     def __init__(self, uid, **kwargs):
         super().__init__(uid)
         self.data['content'] = 'Time to work'
+        self.data['type'] += '.work'
 
-class RelaxStart(BaseNotif):
+class RelaxStart(PomodoroNotif):
     def __init__(self, uid, **kwargs):
         super().__init__(uid)
         self.data['content'] = 'Time to relax'
+        self.data['type'] += '.relax'
 
-class WorkEnd(BaseNotif):
+class WorkEnd(PomodoroNotif):
     def __init__(self, uid, **kwargs):
         super().__init__(uid)
         self.data['content'] = 'work ended'
+        self.data['type'] += '.work_end'
 
-class RelaxEnd(BaseNotif):
+class RelaxEnd(PomodoroNotif):
     def __init__(self, uid, **kwargs):
         super().__init__(uid)
         self.data['content'] = 'Relax ended'
+        self.data['type'] += '.relax_end'
