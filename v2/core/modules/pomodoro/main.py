@@ -14,7 +14,7 @@ from BaseModule import Module
 #---
 import sched
 from notif_sched import CallScheduler
-import notif_types as tps
+import notif_types as notifs
 from enum import Enum
 
 
@@ -45,14 +45,14 @@ class PomodoroModule(Module):
     def _start_work(self, user_id):
         self.set_state(user_id,States.work)
         self._send(
-                tps.WorkStart(user_id).data
+                 notifs.WorkStart(user_id).data
                 )
         self.sched.enter(self.work_time, self._on_end_work, (user_id,))
 
     def _start_relax(self, user_id):
         self.set_state(user_id,States.relax)
         self._send(
-                tps.RelaxStart(user_id).data
+                 notifs.RelaxStart(user_id).data
                 )
         self.sched.enter(self.relax_time, self._on_end_relax, (user_id,))
 
@@ -62,7 +62,7 @@ class PomodoroModule(Module):
         auto_continue = True
         ##
         self._send(
-             tps.WorkEnd(user_id).data
+              notifs.WorkEnd(user_id).data
                 )
         if auto_continue:
             self._start_relax(user_id)
@@ -73,7 +73,7 @@ class PomodoroModule(Module):
         auto_continue = True
         ##
         self._send(
-                tps.RelaxEnd(user_id).data
+                 notifs.RelaxEnd(user_id).data
                 )
         if auto_continue:
             self._start_work(user_id)
