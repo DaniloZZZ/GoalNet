@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import Modal from 'react-responsive-modal';
+import Modal from 'react-responsive-modal'
 import L from 'react-dom-factories'
+import Timekeeper from 'react-timekeeper'
 L_ = React.createElement
 import { Form, Field } from 'react-final-form'
 
@@ -11,6 +12,16 @@ export default class NewGoal extends React.Component
     super()
     @onCreate = onCreate
 
+  onCreateTask:(task)=>
+    task.start=@state.start
+    task.end=@state.end
+    @onCreate(task)
+    @onClose()
+
+  changeStart:(ts)=>
+    @setState start:ts.formatted
+  changeEnd:(ts)=>
+    @setState end:ts.formatted
   onOpen:=>
     @setState open:true
   onClose:=>
@@ -23,13 +34,21 @@ export default class NewGoal extends React.Component
       L_ Modal, open:open, onClose:@onClose, center:true,
         L.div 0,
           L_ Form,
-            onSubmit:@onCreate
+            onSubmit:@onCreateTask
             render:({handleSubmit})=>
               L.form onSubmit:handleSubmit,
                 L.h2 0, "New goal"
                 L.div 0,
                   L.label 0, "Name"
                   L_ Field, name:'name',component:'input',placeholder:'Name', null
+                  L.div style:width:700,
+                    L.div style:float:'left',
+                      L.h3 0, "Start:"
+                      L_ Timekeeper, time:@state.start,onChange:@changeStart
+                    L.div style:float:'right',
+                      L.h3 0, "End:"
+                      L_ Timekeeper, time:@state.end,onChange:@changeEnd
+                    L.button type:'submit', 'Create'
 
 
 
