@@ -3,8 +3,20 @@ Created by Danil Lykov @danlkv on 13/02/19
 """
 
 import zmq
-import yaml
-config_file = 'config.yml'
+import yaml,json
+import os
+config_file = os.environ.get("GNET_CONFIG_YML") or '/home/danlkv/GoalNet/v2/config.yml'
+
+def themify(topic,msg):
+    """ json encode the message and prepend the topic """
+    return topic + ' ' + json.dumps(msg)
+
+def dethemify(topicmsg):
+    """ Inverse of themify() """
+    json0 = topicmsg.find('{')
+    topic = topicmsg[0:json0].strip()
+    msg = json.loads(topicmsg[json0:])
+    return topic, msg
 
 def read_yaml(name):
     with open(name, 'r') as stream:
@@ -24,7 +36,9 @@ def get_network_config():
     addr = get_config_server_addr()
     s.connect(addr)
     s.send_string('netconfig')
+    print("Getting network config from %s..."%addr, end=" ", flush=True)
     netconf = s.recv_json()
+    print("done")
     return NetworkConfig(netconf)
 
 class NetworkConfig:
