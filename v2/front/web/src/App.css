@@ -3,8 +3,27 @@ body {
   margin: 0;
   font-size: 20px;
   font-family: monospace;
-  background: #222222;
-  color: pink;
+  color: darkblue
+}
+
+.menu{
+    position: absolute;
+    width:10em;
+    padding:0.5em;
+}
+.main{
+    position: absolute;
+    height:80%;
+    width:80%;
+    left:12em;
+}
+
+.menu-item{
+    text-align:left;
+    margin:0.2em;
+    padding:1em;
+    background: #eaf6ff;
+
 }
 
 button {

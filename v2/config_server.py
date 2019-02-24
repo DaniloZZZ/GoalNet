@@ -1,4 +1,5 @@
 import zmq, yaml
+import argparse
 
 config_file = 'config.yml'
 
@@ -22,6 +23,10 @@ def _get_netconfig():
             'DMX':base_addr + '9002',
             'DB':base_addr + '9003',
             'console':base_addr + '9101',
+            'telegram':base_addr + '9102',
+            'vk':base_addr + '9103',
+            'tasks':base_addr + '9104',
+            'vksleep':base_addr + '9013',
             'logger':base_addr + '9011',
             'echo':base_addr + '9012',
             }
