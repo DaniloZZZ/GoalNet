@@ -5,11 +5,9 @@ import zmq, os, time
 import json
 from pprint import pprint
 import multiprocessing as prc
-try:
-    from utils__ import themify, dethemify, get_network_config
-except ImportError:
-    from goalnet.core.utils import themify, dethemify, get_network_config
-
+from goalnet.helpers.log_init import log
+from goalnet.core.utils import themify, dethemify, get_network_config
+import trio
 
 class Module:
     """
@@ -17,11 +15,11 @@ class Module:
     """
     def __init__(self, netconf,name='baseModule'):
         self.source = self._get_mux_socket(netconf)
-        self.sink = self._get_dmx_socket(netconf)
+        self.drain = self._get_dmx_socket(netconf)
         self.name = name
 
-    def _print(self,*args):
-        print(">%sModule>"%self.name, *args)
+    def _print(self,msg):
+        log.info(msg)
 
     def _get_dmx_socket(self,netconf):
         ctx = zmq.Context()
@@ -35,42 +33,29 @@ class Module:
             s.setsockopt(zmq.SUBSCRIBE, topic)
         s.connect(netconf.get_address("MUX_out"))
         return s
-    #---- explore if we need this?
-    def _get_mux_socket_pull(self,netconf):
-        ctx = zmq.Context()
-        s = ctx.socket(zmq.PULL)
-        s.connect(netconf.get_address("MUX_out"))
-        return s
-    #----
 
     def _recv(self):
         raw = self.source.recv_string()
         topic, msg = dethemify(raw)
         return msg
 
-    def run_function(self):
+    def server_listen_loop(self):
         self._print("running...")
         while True:
             msg = self._recv()
             notif = self.handle_action(msg)
             if notif:
-                self._send(notif)
+                self._print('sending',notif)
+                self.drain.send_json(notif)
 
-    def _send(self,notif):
-        if notif:
-            self._print('sending',notif)
-            self.sink.send_json(notif)
-        else:
-            self._print('called send on',notif)
-
+    @abstractmethod
     def handle_action(self,msg):
-        self._print("Do not use base class per se")
-        return None
+        pass
 
     def start(self):
-        self.run_function()
+        self.server_listen_loop()
 
     def start_parallel(self):
-        process = prc.Process(target=self.run_function, name=self.name)
+        process = prc.Process(target=self.server_listen_loop, name=self.name)
         process.start()
 
