@@ -28,11 +28,11 @@ class TestStart(unittest.TestCase):
         process.join()
 
     def test_logging_module(self):
-        module = g.start_module('logger')
+        lproc = g.start_module('logger')
         print("Terminating logging process")
         time.sleep(0.1)
-        module.process.terminate()
-        module.process.join()
+        lproc.terminate()
+        lproc.join()
 
 
 if __name__=="__main__":

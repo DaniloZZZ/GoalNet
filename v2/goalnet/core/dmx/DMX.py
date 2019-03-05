@@ -5,6 +5,7 @@ Created by Danil Lykov @danlkv on 13/02/19
 import zmq, os, time
 import json
 from pprint import pprint
+from goalnet.helpers.log_init import log
 
 import multiprocessing as prc
 from ..utils import themify, dethemify, get_network_config
@@ -19,8 +20,8 @@ def DMX(my_name, network_config):
     print("Binding DMX pull to",source_addr)
     source.bind( source_addr )
     #-----
-    connectors  = ['console','telegram']
-    #connectors  = ['console']
+    #connectors  = ['console','telegram']
+    connectors  = ['console']
     conn_addr = [(conn, network_config.get_address(conn)) for conn in connectors ]
     sockets = {}
     for name, addr in conn_addr:
@@ -33,12 +34,12 @@ def DMX(my_name, network_config):
         print("DMX in:")
         print(notif)
         for name,socket in sockets.items():
-            print("Sending notif to %s connector"%name)
+            log.debug("Sending notif to %s connector"%name)
             socket.send_json(notif)
         for name,socket in sockets.items():
-            print("getting answer %s connector"%name)
+            log.debug("getting answer %s connector"%name)
             answer = socket.recv_string()
-            print('dmx %s answ'%name,answer)
+            log.debug('dmx %s answ %s'%(name,answer))
 
 def start_dmx():
     netconf = get_network_config()

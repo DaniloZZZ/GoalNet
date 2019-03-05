@@ -2,6 +2,7 @@
 Created by Danil Lykov @danlkv on 13/02/19
 """
 
+from goalnet.helpers.log_init import log
 #from .connectors.console import launch_console_connector
 from .core.modules.echo import EchoModule
 from .core.modules.logger import  LoggerModule
@@ -14,6 +15,7 @@ from .core.dmx.DMX import DMX
 import multiprocessing as prc
 
 from .utils import get_network_config
+from .helpers.NodeWrap import NodeWrap
 
 MODULES = {
     'logger':LoggerModule,
@@ -38,11 +40,9 @@ def start_connector():
 
 def start_module(name):
     Module = MODULES[name]
-    netconf = get_network_config()
-    print("starting module",name)
-    module = Module(netconf, name=name)
-    module.start()
-    return module
+    log.info("starting module %s"%name)
+    process = NodeWrap(Module, name)
+    return process
 
 def start_connector():
     start_config_server()
@@ -55,7 +55,7 @@ def start_mux(parallel=False):
     )
 
 def start_dmx(parallel=False):
-    return start_maybe_parallel(
+    return conf_start_node(
         DMX,
         'DMX',
         parallel=parallel

@@ -1,12 +1,11 @@
 import logging
-###
-FORMAT = '[%(asctime)s.%(msecs)3d::%(levelname)-7s::%(module)s]|| %(funcName)-15s\t |%(message)s'
+FORMAT = '[%(asctime)s.%(msecs)3d::%(processName)-7s::%(levelname)-7s::%(module)s]|| %(funcName)-15s\t |%(message)s'
 logging.basicConfig(
     level=logging.DEBUG,
     format = FORMAT,
     datefmt = '%M:%S',
 )
-log = logging.getLogger('trio_test')
+log = logging.getLogger('GoalNet')
 ###
 
 # encoding: utf-8

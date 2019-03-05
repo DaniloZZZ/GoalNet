@@ -3,12 +3,15 @@ import zmq, os, time
 import json
 import multiprocessing as prc
 
-from AsyncZMQNode import AsyncZMQNode
-from BaseModule import BaseModule
+from goalnet.helpers.log_init import log
+from goalnet.core.utils import themify, dethemify
+from .AsyncZMQNode import AsyncZMQNode
+from .BaseModule import BaseModule
 
 class AsyncModule(AsyncZMQNode, BaseModule):
-    def __init__(self, netconf, db, name='BaseModule'):
+    def __init__(self, netconf, db=None, name='BaseModule'):
         self.netconf = netconf
+        self.name = name
         self.db = db
         source = self._get_mux_socket()
         drain = self._get_dmx_socket()

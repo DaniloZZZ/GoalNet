@@ -19,7 +19,7 @@ def filter_action(action):
     on the behaf of a user
     check app id of connector
     """
-    if not action.get('appid'):
+    if not action.get('app_id'):
         return None
     if not action.get('user_id'):
         return None

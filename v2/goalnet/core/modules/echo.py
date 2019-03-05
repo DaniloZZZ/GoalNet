@@ -8,10 +8,10 @@ from pprint import pprint
 import multiprocessing as prc
 
 from ..utils import themify, dethemify, get_network_config
-from goalnet.core.modules.BaseModule import Module
+from goalnet.core.modules.BaseModule import BaseModule
 
 
-class EchoModule(Module):
+class EchoModule(BaseModule):
     """
     A simple module that passes everything unchanged as notification
     """

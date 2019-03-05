@@ -30,9 +30,9 @@ def read_config():
 def get_config_server_addr():
     return read_config()['config_address']
 
-ctx = zmq.Context()
-s = ctx.socket(zmq.REQ)
 def get_network_config():
+    ctx = zmq.Context()
+    s = ctx.socket(zmq.REQ)
     addr = get_config_server_addr()
     print("Getting network config from %s..."%addr, end=" ", flush=True)
     s.connect(addr)
