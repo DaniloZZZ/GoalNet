@@ -43,6 +43,30 @@ class TestModules(unittest.TestCase):
         self.dmx_p.terminate()
         self.dmx_p.join()
 
+    def test_db_module(self):
+        db_process = g.start_module('database')
+        netconf = get_network_config()
+        mux_addr = netconf.get_address("MUX_in")
+        listen_addr = netconf.get_address("console")
+        emitter = get_mux_socket(mux_addr)
+        consumer = get_source_socket(listen_addr)
+        time.sleep(0.01)
+        tms = []
+        for i in range(10):
+            log.info(">>OUT>>")
+            emitter.send_json({"app_id":1,"user_id":1,"action":"put",'data':{'foo':i}})
+            doc = consumer.recv_json()
+            consumer.send_string("OK")
+            log.info("<<IN<< %s"%doc)
+        emitter.send_json({"app_id":1,"user_id":1,"action":"get"})
+        doc = consumer.recv_json()
+        consumer.send_string("OK")
+        log.info("<<IN<< %s"%doc)
+        print("Terminating logging process")
+        db_process.terminate()
+        db_process.join()
+
+    @unittest.skip
     def test_logging_module(self):
         log_process = g.start_module('logger')
         netconf = get_network_config()
