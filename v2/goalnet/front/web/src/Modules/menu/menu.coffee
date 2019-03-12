@@ -19,6 +19,8 @@ export default Menu = ()->
         L_ Link, to:'/statistics', 'Statistics'
       L.div className:'menu-item',
         L_ Link, to:'/settings', 'Settings'
+      L.div className:'menu-item',
+        L_ Link, to:'/ADMIN', 'config_panel'
 
 
 

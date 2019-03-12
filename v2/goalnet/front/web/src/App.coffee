@@ -11,6 +11,7 @@ import StatsPage from './Pages/statistics/stats.coffee'
 import CalendarPage from './Pages/calendar/calendar.coffee'
 import SettingsPage from './Pages/settings/settings.coffee'
 import ProjectsPage from './Pages/projects/projects.coffee'
+import AdminPage from './admin/config/page.coffee'
 import {logged_in,debug_login} from './Utils/sessions.coffee'
 import Menu from './Modules/menu/menu.coffee'
 L_ = React.createElement
@@ -89,6 +90,10 @@ export default class App extends React.Component
             path:'/projects'
             render: =>
               @welcomeOrComponent L_ ProjectsPage, uid:@state.uid,0
+          L_ Route,
+            path:'/ADMIN'
+            render: =>
+              @welcomeOrComponent L_ AdminPage, uid:@state.uid,0
 
 WaitAuth= ()->
   L.div 0,
