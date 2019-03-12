@@ -1,8 +1,6 @@
 path = require 'path'
 webpack = require 'webpack'
-{ rules, loaders, plugins, stats } = require('webpack-atoms')
 
-browsers = ['last 2 versions', 'ie >= 10', 'not android <= 4.4.3']
 HtmlWebpackPlugin = require 'html-webpack-plugin'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
 
@@ -62,14 +60,10 @@ module.exports =
           loader: 'less-loader',
         }],
       },
-      rules.js({}),
-      #rules.less({ browsers }),
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
-      #{ oneOf: [rules.css.modules(), rules.css()] },
-      #{ test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel-loader'] },
 
     ]
   plugins: [

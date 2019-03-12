@@ -16,6 +16,8 @@
     "coffee": "^5.2.1",
     "dexie": "^2.0.4",
     "final-form": "^4.11.1",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "moment": "^2.24.0",
     "pondjs": "^0.8.10",
     "react": "^16.0.0",
@@ -23,14 +25,14 @@
     "react-big-calendar": "^0.20.3",
     "react-dom": "^16.0.0",
     "react-dom-factories": "^1.0.2",
+    "react-editable-json-tree": "^2.2.1",
     "react-final-form": "^4.0.2",
     "react-responsive-modal": "^3.6.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-timekeeper": "^1.1.0",
     "react-timeseries-charts": "^0.15.5",
-    "tapable": "1.0.0-beta.5",
-    "webpack-atoms": "^10.0.0"
+    "tapable": "1.0.0-beta.5"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
