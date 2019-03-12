@@ -10,8 +10,9 @@ from goalnet.helpers.log_init import log
 import multiprocessing as prc
 from ..utils import themify, dethemify, get_network_config
 
-def DMX(my_name, network_config):
+def DMX(my_name, network_config, connectors=[]):
     print("DMX is listening named as:%s"%my_name)
+    print("DMX connectors: %s"%connectors)
     source_addr = network_config.get_address(my_name)
     # But maybe use PUB-SUB for output ??
     ###> Prepare the zmq sockets
@@ -21,7 +22,6 @@ def DMX(my_name, network_config):
     source.bind( source_addr )
     #-----
     #connectors  = ['console','telegram']
-    connectors  = ['websocket']
     conn_addr = [(conn, network_config.get_address(conn)) for conn in connectors ]
     sockets = {}
     for name, addr in conn_addr:

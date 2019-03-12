@@ -6,6 +6,7 @@ from goalnet.helpers.log_init import log
 #from .connectors.console import launch_console_connector
 from .core.modules.echo import EchoModule
 from .core.modules.logger import  LoggerModule
+from .core.modules.database.db import  DataBaseModule
 from .config_server import start_config_server
 
 # TODO: muxMuxMUX looks ugly
@@ -19,6 +20,7 @@ from .helpers.NodeWrap import NodeWrap
 
 MODULES = {
     'logger':LoggerModule,
+    'database':DataBaseModule,
 }
 
 def start_maybe_parallel(func,name,args=[],parallel=True):
@@ -29,9 +31,10 @@ def start_maybe_parallel(func,name,args=[],parallel=True):
         print("starting %s server in process..."%name)
         return processed(func,args=args,name=name)
 
-def conf_start_node(func,name,parallel=True):
+def conf_start_node(func, name, *args,parallel=True):
     netconf = get_network_config()
-    return start_maybe_parallel(func,args=(name,netconf),
+    args = (name,netconf)+args
+    return start_maybe_parallel(func,args=args,
                          name=name, parallel=parallel
                         )
 
@@ -54,10 +57,11 @@ def start_mux(parallel=False):
         parallel=parallel
     )
 
-def start_dmx(parallel=False):
+def start_dmx(connectors=[], parallel=False):
     return conf_start_node(
         DMX,
         'DMX',
+        connectors,
         parallel=parallel
     )
 

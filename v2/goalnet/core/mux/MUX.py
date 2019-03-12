@@ -46,7 +46,8 @@ def MUX(my_name, network_config):
         action = filter_action(action)
         if action:
             print("MUX out")
-            sink.send_string(themify('module',action))
+            topic = action.get('action','')
+            sink.send_string(themify(topic, action))
         else:
             print("action forbidden")
 

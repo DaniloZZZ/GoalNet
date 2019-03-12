@@ -12,6 +12,7 @@ import goalnet as g
 from goalnet.helpers.log_init import log
 from pprint import pprint
 from goalnet.utils import get_network_config
+from goalnet.connectors import NetworkAPI
 
 def get_source_socket(addr):
     ctx = zmq.Context()
@@ -30,7 +31,7 @@ class TestModules(unittest.TestCase):
         self.conf_process = process = g.start_cnf()
         time.sleep(0.01)
         self.mux_p = g.start_mux(parallel=True)
-        self.dmx_p = g.start_dmx(parallel=True)
+        self.dmx_p = g.start_dmx(connectors=['console'], parallel=True)
 
     def tearDown(self):
         #print("Terminating conf server process")
@@ -44,24 +45,28 @@ class TestModules(unittest.TestCase):
         self.dmx_p.join()
 
     def test_db_module(self):
+        # start db module
         db_process = g.start_module('database')
+        # configure connection to dmx
         netconf = get_network_config()
-        mux_addr = netconf.get_address("MUX_in")
-        listen_addr = netconf.get_address("console")
-        emitter = get_mux_socket(mux_addr)
-        consumer = get_source_socket(listen_addr)
-        time.sleep(0.01)
-        tms = []
+        netapi = NetworkAPI(netconf,'id1', 'console')
+
         for i in range(10):
             log.info(">>OUT>>")
-            emitter.send_json({"app_id":1,"user_id":1,"action":"put",'data':{'foo':i}})
-            doc = consumer.recv_json()
-            consumer.send_string("OK")
+
+            netapi.send({"app_id":1,"user_id":1,"action":"put",'data':{'foo':i}})
+            doc = netapi.recv()
+            netapi.reply_notif("OK")
+
             log.info("<<IN<< %s"%doc)
-        emitter.send_json({"app_id":1,"user_id":1,"action":"get"})
-        doc = consumer.recv_json()
-        consumer.send_string("OK")
+
+        netapi.send({"app_id":1,"user_id":1,"action":"get"})
+
+        doc = netapi.recv()
+        netapi.reply_notif("OK")
+
         log.info("<<IN<< %s"%doc)
+
         print("Terminating logging process")
         db_process.terminate()
         db_process.join()
