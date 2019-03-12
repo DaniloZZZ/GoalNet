@@ -21,7 +21,7 @@ def DMX(my_name, network_config):
     source.bind( source_addr )
     #-----
     #connectors  = ['console','telegram']
-    connectors  = ['console']
+    connectors  = ['websocket']
     conn_addr = [(conn, network_config.get_address(conn)) for conn in connectors ]
     sockets = {}
     for name, addr in conn_addr:

@@ -29,8 +29,9 @@ def _get_netconfig():
             'telegram':base_addr + '9102',
             'vk':base_addr + '9103',
             'tasks':base_addr + '9104',
-            'self_loop':base_addr + '9105',
+            'websocket':base_addr + '9105',
 
+            'database':base_addr + '9014',
             'vksleep':base_addr + '9013',
             'logger':base_addr + '9011',
             'echo':base_addr + '9012',
