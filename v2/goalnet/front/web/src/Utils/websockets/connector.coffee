@@ -37,13 +37,9 @@ export class Connector
 		@connected = false
 
 		@socket.onmessage = (m)=> @onMessage(m)
-		@socket.onopen =  @onOpen
+		@socket.onopen  =  @onOpen
 		@socket.onclose =  @onClose
-		@socket.onerror=  @onError
-
-	setOnStateChange:(event_callback)=>
-		console.log 'Oncla', event_callback
-		@on_state_change = event_callback
+		@socket.onerror =  @onError
 
 
 	onMessage:(event)=>
@@ -52,30 +48,41 @@ export class Connector
 		console.log 'this in conn', @
 		@callback(message)
 
+	####
+	# A bunch of handlers with logging
 	onOpen:()=>
 		@connected = true
-		console.log 'socket connected'
+		console.log 'Websocket connected', @api_path
 		@on_state_change('open')
 
 	onClose:()=>
 		@connected = false
-		console.log 'socket closed'
+		console.info 'Websocket closed', @api_path
 		@on_state_change('close')
 
 	onError:(e)=>
-		console.log 'Error from socket', e
+		console.error 'Error from socket', e
 		@on_state_change('error',e)
+	####
 
+	on_state_change:(state, event)->
+		if @onStateChange
+			@onStateChange state, event
 	close:()=>
-		console.log 'Closing socket'
+		console.log 'Closing socket to', @api_path
 		@socket.close()
 		
 	send:(message)=>
 		if @connected
 			@socket.send(message)
-			console.log('sent',message)
+			console.debug('sent',message)
 		else
-			console.log('not connected')
+			console.error('Websocket not connected')
+
+	setOnStateChange:(event_callback)=>
+		if not event_callback
+			console.error 'Attempted to set onStateChange to ', event_callback
+		@onStateChange = event_callback
 
 export default class DataRouter extends Connector
 	constructor:(props)->
