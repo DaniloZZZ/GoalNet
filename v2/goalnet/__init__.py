@@ -5,3 +5,4 @@ from .main import start_dmx
 from .main import start_cnf
 from .utils import get_network_config
 from .config_server import read_config
+from .helpers.log_init import log

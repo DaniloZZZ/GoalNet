@@ -9,11 +9,11 @@ from .AsyncZMQNode import AsyncZMQNode
 from .BaseModule import BaseModule
 
 class AsyncModule(AsyncZMQNode, BaseModule):
-    def __init__(self, netconf, db=None, name='BaseModule'):
+    def __init__(self, netconf, db=None, topics=[b''], name='BaseModule'):
         self.netconf = netconf
         self.name = name
         self.db = db
-        source = self._get_mux_socket()
+        source = self._get_mux_socket(topics=topics)
         drain = self._get_dmx_socket()
         super().__init__(source,drain)
 
