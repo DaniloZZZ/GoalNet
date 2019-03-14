@@ -7,7 +7,7 @@ import json
 from pprint import pprint
 
 import multiprocessing as prc
-from ..utils import themify, dethemify, get_network_config
+from ..utils import themify, get_network_config
 
 def themify(topic,msg):
     """ json encode the message and prepend the topic """

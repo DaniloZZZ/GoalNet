@@ -28,7 +28,7 @@ class TestWebsocket(unittest.TestCase):
         self.conf_process = process = g.start_cnf()
         time.sleep(0.01)
         self.mux_p = g.start_mux(parallel=True)
-        self.dmx_p = g.start_dmx(parallel=True)
+        self.dmx_p = g.start_dmx(connectors=['websocket'], parallel=True)
         self.log_p = g.start_module('logger')
 
     def test_start(self):
@@ -40,7 +40,7 @@ class TestWebsocket(unittest.TestCase):
         notif = json.loads(message)
         assert notif['action']==message_out['action']
         print(message)
-        proc.terminate()
+        #proc.terminate()
         proc.join()
 
     def tearDown(self):

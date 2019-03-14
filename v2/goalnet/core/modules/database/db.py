@@ -4,9 +4,11 @@ Created by Danil Lykov @danlkv on 06/03/19
 
 from pprint import pprint
 import multiprocessing as prc
+
 from goalnet.helpers.log_init import log
 
-from goalnet.utils import get_network_config
+from goalnet.utils import get_network_config, get_action_path
+from goalnet.helpers import StatData
 from ..AsyncBaseModule import AsyncModule
 
 class ArrayDB:
@@ -26,18 +28,30 @@ class DataBaseModule(AsyncModule):
     def __init__(self, netconf,name='database'):
         super().__init__(netconf, name=name)
         self.db = ArrayDB()
+        self.statdata = StatData()
 
     async def node_fun(self,message,drain):
         log.info('message: %s'%message)
-        action = message.get('action')
-        if not action:
-            return {"error":'No action field'}
-        elif action=='get':
-            return self.db.get_all()
-        else:
-            log.info("saving message to db %s"%message)
-            self.db.put(message)
-            return {'status':0,'db_len':self.db.len()}
+        ## Parse action 
+        action_path = get_action_path(message)
+        if action_path:
+            action = action_path[0]
+            module = action_path[1]
+            target = action_path[2]
+
+            if module == 'test':
+                if target=='record':
+                    return self.statdata.record(message, action=action)
+                if target=='metrics':
+                    return self.statdata.metric(message, action=action)
+
+            if action=='get':
+                return self.db.get_all()
+            else:
+                log.info("saving message to db %s"%message)
+                self.db.put(message)
+                return {'status':0,'db_len':self.db.len()}
+        return {"error":'No action field'}
 
 def launch_logger(name,netconf):
     logm = LoggerModule(netconf,name=name)

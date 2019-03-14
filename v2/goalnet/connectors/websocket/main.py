@@ -7,7 +7,6 @@ from goalnet.utils import get_network_config
 from .. import NetworkAPI
 from .storage import Storage
 from goalnet import log
-from ..baseConnector import BaseConnector
 
 async def echo_server(request):
     ws = await request.accept()

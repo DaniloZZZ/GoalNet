@@ -1,5 +1,6 @@
 
 from tinycalltrace import TinyCallTrace
+# this class is not yet used
 class Datum:
     def __init__(value, time, dur=None):
         self.value = value
