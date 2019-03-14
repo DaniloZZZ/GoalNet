@@ -73,7 +73,7 @@ class IntegralMetrics(Metrics):
         duration  =  end-start
         step = params.get('step', duration)
         step_count = int(duration/step)
-        domain_points = 43
+        domain_points = 43+step_count
         step_points = domain_points//step_count
         dt = step/(step_points)
 
@@ -89,7 +89,7 @@ class IntegralMetrics(Metrics):
             values.append(val)
 
         log.info('returning values %s'%values)
-        return values
+        return {'data':values,'name':'integral','domain':domain}
 
 class Records:
     def __init__(self, name, data=[]):
@@ -124,14 +124,23 @@ class StatData():
         self.metrics['integral'] = IntegralMetrics(data_type='str')
 
     def record(self, data, action):
-        record_name = data['name']
+        record_name = data.get('name')
+        if not record_name:
+            return {"error":"no 'name' field for metric"}
         record = self.records.get(record_name)
         if action=='get':
             if not record:
                 return {"error":'No such record'}
-            return record.get()
+            return {'data':record.get()}
         if action=='put':
-            record.add((data[self.datakey],data[self.timekey]))
+            if not record:
+                # TODO: raise not found error
+                log.error("No record with name '%s'"%record_name)
+                return {"error":'No such record'}
+            try:
+                record.add((data[self.datakey],data[self.timekey]))
+            except KeyError as e:
+                return {"error":"key not found:%s"%e}
             return {'record_data_count':len(record.data)}
         if action=='add':
             self.records[record_name] = Records(name=record_name)
@@ -140,7 +149,9 @@ class StatData():
             return self.records.pop(record_name, {'error':'no such records'})
 
     def metric(self, data, action):
-        metrics_name = data['name']
+        metrics_name = data.get('name')
+        if not metrics_name:
+            return {"error":"no 'name' field for metric"}
         metrics = self.metrics.get(metrics_name)
         if action=='get':
             if not metrics:
@@ -153,7 +164,10 @@ class StatData():
             else:
                 providers_names = data['providers']
             # TODO: maybe should call self.record get here??
-            providers = [ self.records[prov] for prov in providers_names ]
+            try:
+                providers = [ self.records[prov] for prov in providers_names ]
+            except KeyError as e:
+                return {"error":'no record found with name %s'%e}
 
             return metrics.get(params=data, providers=providers)
 
