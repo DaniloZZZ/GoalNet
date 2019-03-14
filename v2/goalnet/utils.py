@@ -7,6 +7,13 @@ import yaml,json
 import os
 config_file = os.environ.get("GNET_CONFIG_YML") or '/home/danlkv/GoalNet/v2/config.yml'
 
+
+def get_action_path(message):
+    action_str = message.get('action')
+    if action_str:
+        return action_str.split('.')
+    return None
+
 def themify(topic,msg):
     """ json encode the message and prepend the topic """
     return topic + ' ' + json.dumps(msg)

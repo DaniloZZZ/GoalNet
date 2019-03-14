@@ -83,7 +83,6 @@ class IntegralMetrics(Metrics):
         values = []
         for step_start, step_end in zip(domain[:-1],domain[1:]):
             step_values = [ get_datum(prov[t])*dt for t in np.linspace(step_start, step_end, step_points, endpoint=False) ]
-            print(step_values)
             val =  sum(step_values).dict()
             val.update({"time":step_start})
             values.append(val)

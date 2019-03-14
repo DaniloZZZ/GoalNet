@@ -11,14 +11,14 @@ import multiprocessing as prc
 from ..utils import themify, dethemify, get_network_config
 
 def DMX(my_name, network_config, connectors=[]):
-    print("DMX is listening named as:%s"%my_name)
-    print("DMX connectors: %s"%connectors)
+    log.info("DMX is listening named as:%s"%my_name)
+    log.info("DMX connectors: %s"%connectors)
     source_addr = network_config.get_address(my_name)
     # But maybe use PUB-SUB for output ??
     ###> Prepare the zmq sockets
     ctx = zmq.Context()
     source = ctx.socket(zmq.PULL)
-    print("Binding DMX pull to",source_addr)
+    log.debug("Binding DMX pull to %s"%source_addr)
     source.bind( source_addr )
     #-----
     #connectors  = ['console','telegram']
@@ -31,8 +31,7 @@ def DMX(my_name, network_config, connectors=[]):
     ###<
     while True:
         notif = source.recv_json()
-        print("DMX in:")
-        print(notif)
+        log.debug("DMX in: %s"%notif)
         for name,socket in sockets.items():
             log.debug("Sending notif to %s connector"%name)
             socket.send_json(notif)

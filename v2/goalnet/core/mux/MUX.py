@@ -4,7 +4,8 @@ Created by Danil Lykov @danlkv on 13/02/19
 
 import zmq, os, time
 import json
-from pprint import pprint
+from pprint import pprint, pformat
+import logging as log
 
 import multiprocessing as prc
 from ..utils import themify, get_network_config
@@ -26,30 +27,29 @@ def filter_action(action):
     return action
 
 def MUX(my_name, network_config):
-    print("MUX is listening  named as:%s"%(my_name))
+    log.info("MUX is listening  named as:%s"%(my_name))
     source_addr = network_config.get_address(my_name+'_in')
     sink_addr = network_config.get_address(my_name+'_out')
     ###> Prepare the zmq sockets
     ctx = zmq.Context()
     source = ctx.socket(zmq.PULL)
-    print("Binding MUX in to",source_addr)
+    log.debug("Binding MUX in to %s",source_addr)
     source.bind( source_addr )
     #----
     sink = ctx.socket(zmq.PUB)
-    print("Binding MUX out ",sink_addr)
+    log.debug("Binding MUX out to %s",sink_addr)
     sink.bind( sink_addr )
     ###<
     while True:
         action = source.recv_json()
-        print("MUX in action:")
-        print(action)
+        log.debug("MUX<<:%s"%(action))
         action = filter_action(action)
         if action:
-            print("MUX out")
             topic = action.get('action','')
+            log.debug("Sending message of action '%s'. User id: %d"%(topic,action['user_id']))
             sink.send_string(themify(topic, action))
         else:
-            print("action forbidden")
+            log.warn("Action forbidden:%s"%(action))
 
 def start_mux():
     netconf = get_network_config()
@@ -57,7 +57,7 @@ def start_mux():
     p.start()
 
 def main():
-    print("Starting MUX node...")
+    log.info("Starting MUX node...")
     start_mux()
 
 if __name__=='__main__':

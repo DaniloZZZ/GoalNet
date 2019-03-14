@@ -1,5 +1,5 @@
 import logging
-FORMAT = '[%(asctime)s.%(msecs)3d::%(processName)-7s::%(levelname)-7s::%(module)s]|| %(funcName)-15s\t |%(message)s'
+FORMAT = '[%(asctime)s.%(msecs)3d|%(levelname)-7s|%(processName)-12s::%(module)-13s]%(funcName)-13s\t|%(message)s'
 logging.basicConfig(
     level=logging.DEBUG,
     format = FORMAT,
