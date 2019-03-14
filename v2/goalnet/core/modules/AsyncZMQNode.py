@@ -30,7 +30,6 @@ class AsyncZMQNode:
         except Exception as e:
             log.error("Task handler id:%d error %s"%(connection_id,str(e)))
             self.drain.send_json({"error":"error occured"})
-            raise e
 
     def _recv(self):
         return self.source.recv_json()
