@@ -5,8 +5,10 @@ import threading
 from UI import goals, notifs,login, misc,home
 from StateMachine import States
 from DataBase import db
+from tgflow.api.cli import cliAPI
 
 from telebot import apihelper
+
 
 #apihelper.proxy = {
     #'https':'socks5://localhost:9050'}
@@ -15,7 +17,9 @@ from telebot import apihelper
 lg=log.bot.info
 print('Hello. Starting bot')
 
-tgf.configure(token=config.token,state=States.START)
+tgf.configure(token=config.token,
+              #apiModel=cliAPI,
+              state=States.START)
 
 UI = {}
 UI.update(misc.UI)

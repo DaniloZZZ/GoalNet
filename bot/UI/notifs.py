@@ -53,10 +53,12 @@ def stop_pomodoro(s,d):
         return States.ACTIVITY
     else:
         return States.ERROR
+
 def parse_notif(i,s,**d):
     notif = d.get('NotifData',{})
     print(notif)
     t = notif['Type']
+    print('\n\nParsing notif',notif)
     text = 'Some other notif'
     if t=='Pomodoro_Start':
         text = 'Hey! time to do %s'%notif.get('GoalName')
@@ -73,6 +75,14 @@ UI={
             {'Start pomodoro':a(start_pomodoro)},
             {'Pick another goal':a(States.ACTIVITY,update_msg=False)},
             {'Remind me in 5 min':a(States.NOT_IMPLEMENTED)},
+        ],
+        'prepare':parse_notif
+    },
+    States.NOTIF_POMO:{
+        't':ps(lambda s,**d: d.get('NotifText')),
+        'b':[
+            {'Stop':a(stop_pomodoro,update_msg=False)},
+            {'Delay for 2 min':a(States.NOT_IMPLEMENTED)},
         ],
         'prepare':parse_notif
     },

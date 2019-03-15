@@ -23,16 +23,15 @@ class Longpoll():
 
     def event_emmitter(self,addr,params={}):
         while True:
-            print("making longpoll req",addr,params)
+            print("**==>>\nMaking longpoll to ",addr,params)
             r = requests.get(addr,params)
             js = r.json()
             if r.status_code==200:
                 if (self.func(js)):
                     yield js
-                    print('upd',params)
                     self.param_next(params,True)
                 else:
-                    print('no updates, listening more...')
+                    print('** no updates, listening more...')
                     self.param_next(params,False)
             else:
                 raise Exception('longpoller error',
@@ -55,7 +54,7 @@ def start_longpoll(user_id,clb):
             'timeout':'10',
             'category':'telegram:'+str(AppId)
         }):
-        print(event)
+        print("|**********\n New event:",event)
         clb(event)
-        print("**__**\n**--**\n callback returned")
+        print("----------|\n Event processed, waiting for emitter")
 

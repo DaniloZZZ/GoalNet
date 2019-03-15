@@ -1,7 +1,5 @@
-
 import data as d
 from multiprocessing import Process
-
 
 d.init()
 def foo():

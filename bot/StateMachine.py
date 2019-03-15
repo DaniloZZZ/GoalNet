@@ -16,6 +16,8 @@ class States(Enum):
 
     HOME = 200
     NOTIF = 300
+    NOTIF_POMO = 301
+
     WORKING = 310
     POMODORO = 330
     ACTIVITY = 400

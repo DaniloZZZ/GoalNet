@@ -10,5 +10,5 @@ def add_num(num):
 
 def out():
     global List
-    print(List)
+    print(">listdata>",List)
 
