@@ -54,10 +54,10 @@ class App extends Component {
 			<Users></Users>
 			<Menu> </Menu>
 		<div className='main'>
-			<Switch>
+			<Switch context='12'>
 				<Route path='/home' component={Goals}/>
 				<Route path='/newgoal' component={NewGoal}/>
-				<Route path='/user/:id' component={Goals}/>
+				<Route path='/user/:id' component={Goals} context={{'foo':23}}/>
 				<Route path='/user/'>
 					user
 				</Route>

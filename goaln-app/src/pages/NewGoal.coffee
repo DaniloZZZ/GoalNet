@@ -30,7 +30,9 @@ class Goals extends Component
 
 	constructor: (props) ->
 		super()
+		log('props!',props)
 		user_id=config.def_id||props.id
+		@updateStatus = props.updateStatus
 		User.get_goals(user_id).then (g)=>
 			@setState goals:g
 		User.get_sched(user_id).then( (scheds)=>
@@ -47,6 +49,7 @@ class Goals extends Component
 		console.log(node.kind)
 		console.error('Goals Component: Error->')
 		node.onError(err)
+		@updateStatus("Network error")
 
 	achieveByChange: (date)=>
 		@setState
