@@ -32,7 +32,7 @@ func Parse_Action(data string) (
 
 	return r,g,rn.Load(l)
 }
-func fetchRec2N(rec Record)(Goal,Rec2Notif) {
+func fetchRec2N(rec Record)(Rec2Notif) {
 	var g Goal
 	l := Link{ Ref:g.Id }
 	g.Load(l)
@@ -40,5 +40,5 @@ func fetchRec2N(rec Record)(Goal,Rec2Notif) {
 	//r.Load(l)
 	l = Link{ Ref:"42" }
 
-	return g,rn.Load(l)
+	return rn.Load(l)
 }

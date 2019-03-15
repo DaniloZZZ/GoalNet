@@ -6,10 +6,10 @@ var Schema = mongoose.Schema;
 module.exports = 
 
 {
-"date":Date,
 "name":String,
 "phone":String,
+"date":Date,
 "pass":String,
-"login":String,
 "lname":String,
+"login":String,
 };

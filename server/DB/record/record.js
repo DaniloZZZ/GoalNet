@@ -6,8 +6,8 @@ var Schema = mongoose.Schema;
 module.exports = 
 
 {
-"command":String,
 "date":Date,
-"content":Schema.Types.Mixed,
 "type":String,
+"content":Schema.Types.Mixed,
+"command":String,
 };

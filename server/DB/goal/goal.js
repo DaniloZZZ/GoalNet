@@ -7,7 +7,7 @@ module.exports =
 
 {
 "done":Boolean,
-"desc":String,
 "title":String,
+"desc":String,
 "date":Date,
 };

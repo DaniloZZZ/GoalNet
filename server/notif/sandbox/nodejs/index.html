@@ -1,0 +1,54 @@
+<head>
+	<title>Request former</title>
+	<script src="main.js"></script>
+</head>
+
+<body>
+
+	<div class="d">
+		http://<input id="address" type="text">
+		<input id="type" type="text">
+		<span id="add" onClick="Add()">
+			add
+		</span >
+		
+
+		<div id="json" class="div">
+			<div id="item">
+				<input id="key" type="text">
+				<input id="value" type="text">
+			</div>
+		</div>
+		<div id="submit" onClick="onSubmit()"
+			class="div">
+			<div id="submit">
+				Submit
+			</div>
+		</div>
+		<div id="result" class="div">
+		</div>
+	</div>
+<style>
+body{
+	font-size:24px;
+}
+#add{
+	background-color:#99a;
+	margin:5px;
+}
+
+#submit{
+	background-color:#4a4;
+	margin:5px;
+}
+#address{
+	margin:5px;
+	border-width:1px;
+}
+input{
+	background-color:#fff;
+	color:#000;
+}
+
+</style>
+</body>

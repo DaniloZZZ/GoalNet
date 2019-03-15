@@ -32,7 +32,7 @@ func (me Rec2Notif) Load(l Link) Rec2Notif{
 			log.Println("Record content.type",rec.Content["type"])
 			log.Println("Record Command",rec.Command)
 			if rec.Command=="Pomodoro_Start"{
-				tim := time.Now().Add(15*time.Second)
+				tim := time.Now().Add(5*time.Second)
 				//status := Get_Pomodoro_User(id)
 				n := Notification{
 					Medium : "telegram",
@@ -47,7 +47,7 @@ func (me Rec2Notif) Load(l Link) Rec2Notif{
 				}
 				return n
 			}else if rec.Command=="Pomodoro_End" {
-				tim := time.Now().Add(8*time.Second)
+				tim := time.Now().Add(3*time.Second)
 				n := Notification{
 					Medium : "telegram",
 					Content : map[string]string{

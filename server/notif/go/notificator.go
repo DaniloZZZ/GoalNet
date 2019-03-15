@@ -65,11 +65,11 @@ func ScheduleNotification(
 						UserId : notif.UserId, // Preserve uid
 						// in chained notifications
 					}
-					goal,rec2notif := fetchRec2N(rec)
+					rec2notif := fetchRec2N(rec)
 					//These are programmatically emitted recors
 					// Probably should configure if saving
 					rec.Save()
-					next_notif := rec2notif.Apply(rec,goal)
+					next_notif := rec2notif.Apply(rec,g)
 					return next_notif , schedule_next
 				}else{
 					return Notification{},false

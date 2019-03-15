@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 module.exports = 
 
 {
+"date":Date,
 "text":String,
 "author":Schema.Types.ObjectId,
-"date":Date,
 };

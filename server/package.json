@@ -8,5 +8,8 @@
     "start": "NODE_PATH=. coffee -w server.coffee && nodemon server.js"
   },
   "author": "Danil Lykov",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
 }

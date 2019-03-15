@@ -1,0 +1,5 @@
+# store keys of user, this will be checked at every 
+# request to server
+# 
+key: string
+user: oid
