@@ -7,19 +7,35 @@ It helps you to set a goal, develop a plan of it's achieving track the progress 
 This is a list of *personal* preferences
 
 - Goal setting
-  - Create a goal with deadline
-  - Path for achieving
+  - Create a goal/task with deadline
+  - Create success criteria based on metricss
+  - Add subgoals and assign success criteria as completed subgoals
   - What to do on success or failure
-  - Subtasks
-- Monitoring
+  - Versioning: a 'create.goal' action does not overrides
+
+- Planning
+ - Path of goal achieving, one goal after another
+ - Different versions of plan, additions/deletions
+
+- Tracking
   - Chrome extension for tracking sites and behavior
+  - Linux/Windows Qt app 
+    - Tracking
+        [ ] opened files
+        [ ] opened windows
+    - Notifications
+        [ ] Too much work
+        [ ] Too much relax
+
   - Vim plugin to track editing stats *assign files to project, view time spent on file*
-  - Linux app to track everything
-  - Notifications about planned intents
-  - Vk tracking of sleep, greeting on wake up
+  - Notifications about planned goals
+  - Vk tracking of online time and sleep, greeting notification on wake up
+
+- Statistics
   - Conky vis
+
 - Social
-  - Write your success as in blog
+  - Write your success story as in blog
   - Read about cool users with their project
   - Share stats
   - View stats of others
