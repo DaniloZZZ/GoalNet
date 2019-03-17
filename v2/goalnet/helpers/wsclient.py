@@ -1,6 +1,6 @@
 import trio
 
-def ws_req_rep(usl, message):
+def ws_req_rep(url, message):
     message = trio.run(make_request, url, json.dumps(message))
     notif = json.loads(message)
     return notif
