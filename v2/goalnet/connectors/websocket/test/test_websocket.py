@@ -26,7 +26,7 @@ async def make_request(url,message):
 class TestWebsocket(unittest.TestCase):
     def setUp(self):
         self.conf_process = process = g.start_cnf()
-        time.sleep(0.01)
+        time.sleep(0.1)
         self.mux_p = g.start_mux(parallel=True)
         self.dmx_p = g.start_dmx(connectors=['websocket'], parallel=True)
         self.log_p = g.start_module('logger')
