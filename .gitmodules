@@ -1,0 +1,3 @@
+[submodule "v2/goalnet/front/browser_ext/v2/goalnet/front/browser_ext/webext-react-coffeescript-boilerplate"]
+	path = v2/goalnet/front/browser_ext/v2/goalnet/front/browser_ext/webext-react-coffeescript-boilerplate
+	url = git@github.com:DaniloZZZ/webext-react-coffeescript-boilerplate.git
