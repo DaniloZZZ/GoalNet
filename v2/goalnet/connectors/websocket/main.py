@@ -74,7 +74,7 @@ async def server_start(netapi, storage):
         if not user_id:
             # invalid user
             log.error("ws token not found %s"%token)
-            await ws.aclose(4,reason="auth")
+            await ws.aclose(1008,reason="auth")
             return
 
         log.info("got new websock connection from id %s"%user_id)

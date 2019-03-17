@@ -10,6 +10,7 @@ import unittest
 import trio
 import zmq, requests, json
 import goalnet as g
+from trio_websocket import ConnectionClosed
 from goalnet.helpers.log_init import log
 from pprint import pprint
 import multiprocessing as proc
@@ -78,6 +79,15 @@ class TestModules(unittest.TestCase):
         msgauth = {'token':token}
         print("\nmaking request")
         resp = ws_req_rep(self.url, [msgauth,msg])
+        print("\nIN<<\n",resp)
+
+        msgauth = {'token':"oxdeadbeef"}
+        print("\nmaking request")
+        try:
+            resp = ws_req_rep(self.url, [msgauth,msg])
+        except ConnectionClosed as e:
+            print(e)
+            assert e.reason.code==1008
         print("\nIN<<\n",resp)
 
 
