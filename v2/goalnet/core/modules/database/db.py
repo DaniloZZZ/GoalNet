@@ -25,7 +25,8 @@ class ArrayDB:
 def gen_user_id():
     return time.time().as_integer_ratio()[1]
 def gen_token():
-    return time.time().as_integer_ratio()[0]*random.randint(0,1000)
+    t = time.time().as_integer_ratio()[0]*random.randint(0,1000)
+    return hex(t)
 
 class DataBaseModule(AsyncModule):
     """

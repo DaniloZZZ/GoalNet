@@ -56,6 +56,6 @@ class TestWebsocket(unittest.TestCase):
         print("Terminating Logger process")
         self.log_p.terminate()
         self.log_p.join()
- 
+
 if __name__=='__main__':
     unittest.main()

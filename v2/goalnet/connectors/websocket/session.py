@@ -11,23 +11,10 @@ class SessionManager:
     def __init__(self):
         self.sessions = {}
 
-    def check_user(self, user_id, token):
-        dbtoken = self.sessions.get(user_id)
-        if not dbtoken:
-            return
-        if token==dbtoken:
-            return True
-
-    def add_user(self):
-        user = gen_user_id()
-        token = self.add_user_token(user)
-        return user,token
-
-    def create_user_token(self,user_id):
-        token = gen_user_token()
-        self.save_user_token(token)
-        return token
+    def check_token(self, token):
+        uid = self.sessions.get(token)
+        return uid
 
     def save_user_token(self, user_id, token):
         user_id = int(user_id)
-        self.sessions[user_id] = token
+        self.sessions[token] = user_id

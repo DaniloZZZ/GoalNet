@@ -23,6 +23,7 @@ def handle_notif(notif,storage):
     if act=="add.user.auth":
         token = notif.get('token')
         if not token: return {"error":"auth error"}
+        log.debug("saving token '%s' to user id %s"%(token,user_id))
         storage.sessman.save_user_token( user_id, token)
         return {'result':'0','token':token,'user_id':user_id}
     # fallback to original notif
@@ -64,31 +65,32 @@ async def listen_for_notif(netapi, storage):
 async def server_start(netapi, storage):
     PORT = 3032
     async def on_connect(request):
+        log.debug("new connection to ws path %s"%request.url)
         ws = await request.accept()
         message = await ws.get_message()
-        message = json.loads(message)
+        token = json.loads(message).get('token')
+        user_id = storage.sessman.check_token(token)
+        print(user_id)
+        if not user_id:
+            # invalid user
+            log.error("ws token not found %s"%token)
+            await ws.aclose(4,reason="auth")
+            return
+
+        log.info("got new websock connection from id %s"%user_id)
+        storage.add_connection(ws,user_id)
         try:
-            user_id = message.get('user_id')
-            user_id = storage.add_connection(ws,user_id)
-            log.info("got new websock connection from id %s"%user_id)
-            message['user_id'] = user_id
-            netapi.send(message)
             while True:
                 message = await ws.get_message()
                 log.info("got new message from id %s"%user_id)
                 ###
-                token = message.get('token')
-                if not storage.sessman.check_user(user_id,token):
-                    log.warn("Auth error for userid %s and message %s"%(user_id, message))
-                    err = {"error":'auth error'}
-                    ws.send_message(json.dumps(err))
-                    continue
-                ###
                 msg = json.loads(message)
                 msg['user_id'] = user_id
                 netapi.send(msg)
+                await trio.sleep(0)
 
         except ConnectionClosed:
+            storage.remove_connection(user_id)
             log.info("websocket user %s ended connection"%user_id)
 
     async with trio.open_nursery() as nursery:

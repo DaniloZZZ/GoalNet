@@ -1,4 +1,5 @@
 import zmq
+import logging as log
 import multiprocessing.dummy as thread
 
 def _print(*args):
@@ -14,9 +15,11 @@ class ConnectorNetwork:
         mux_addr = self.netconf.get_address('MUX_in')
         ctx = zmq.Context()
         self.mux_sock= ctx.socket(zmq.PUSH)
+        log.debug("connecting to MUX on %s"%mux_addr)
         self.mux_sock.connect(mux_addr)
 
         self.notif_sock = ctx.socket(zmq.REP)
+        log.debug("binding %s to %s"%(self.name,self.myaddr))
         self.notif_sock.bind(self.myaddr)
 
     def send(self,message):
