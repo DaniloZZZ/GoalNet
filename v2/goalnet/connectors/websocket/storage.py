@@ -1,7 +1,10 @@
+from .session import SessionManager
+
 class Storage:
     def __init__(self):
         self.connections = {}
         self.temp_connections = {}
+        self.sessman = SessionManager()
 
     def add_connection(self,conn,user_id=None):
         if user_id:

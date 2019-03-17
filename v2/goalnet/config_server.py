@@ -30,6 +30,7 @@ def _get_netconfig():
             'vk':base_addr + '9103',
             'tasks':base_addr + '9104',
             'websocket':base_addr + '9105',
+            'login':base_addr + '9106',
 
             'database':base_addr + '9014',
             'vksleep':base_addr + '9013',
