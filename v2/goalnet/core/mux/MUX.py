@@ -20,6 +20,7 @@ def filter_action(action):
     on the behaf of a user
     check app id of connector
     """
+    return True
     if not action.get('app_id'):
         return None
     if not action.get('user_id'):
@@ -43,10 +44,10 @@ def MUX(my_name, network_config):
     while True:
         action = source.recv_json()
         log.debug("MUX<<:%s"%(action))
-        action = filter_action(action)
-        if action:
+        send_action = filter_action(action)
+        if send_action:
             topic = action.get('action','')
-            log.debug("Sending message of action '%s'. User id: %d"%(topic,action['user_id']))
+            log.debug("Sending message of action '%s'. User id: %d"%(topic,action.get('user_id',0)))
             sink.send_string(themify(topic, action))
         else:
             log.warn("Action forbidden:%s"%(action))

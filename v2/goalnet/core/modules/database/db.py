@@ -4,6 +4,7 @@ Created by Danil Lykov @danlkv on 06/03/19
 
 from pprint import pprint
 import multiprocessing as prc
+import time, random
 
 from goalnet.helpers.log_init import log
 
@@ -21,6 +22,11 @@ class ArrayDB:
     def len(self):
         return len(self.data)
 
+def gen_user_id():
+    return time.time().as_integer_ratio()[1]
+def gen_token():
+    return time.time().as_integer_ratio()[0]*random.randint(0,1000)
+
 class DataBaseModule(AsyncModule):
     """
     A simple module that logs everything and does nothing afterwards
@@ -28,12 +34,32 @@ class DataBaseModule(AsyncModule):
     def __init__(self, netconf,name='database'):
         super().__init__(netconf, name=name)
         self.db = ArrayDB()
+        self.auth = {}
         self.statdata = StatData()
+
+    def register_user(self, user_id, pwd_hash, email):
+        #TODO: what if user_id exists?
+        # can an attacker overwrite credentials?
+        existing_ = self.auth.get(user_id)
+        if existing_:
+            if pwd_hash!=existing_:
+                return None
+            else:
+                return gen_token()
+        else:
+            self.auth[user_id] = {'pwd_hash':pwd_hash,'email':email}
+            return gen_token()
 
     async def node_fun(self,message,drain):
         log.info('message: %s'%message)
         def response(notif):
-            notif.update({'user_id':message['user_id']})
+            user_id = message.get('user_id')
+            if user_id:
+                notif.update(
+                    {
+                        'user_id':user_id
+                    }
+                )
             return notif
         def handle_action(message, aciton, module, target):
             if module == 'test':
@@ -41,6 +67,27 @@ class DataBaseModule(AsyncModule):
                     return self.statdata.record(message, action=action)
                 if target=='metrics':
                     return self.statdata.metric(message, action=action)
+            if module=='user':
+                if target=='auth':
+                    if action=='add':
+                        user_id = message.get('user_id')
+                        # get user identity
+                        try:
+                            pwd_hash = message['pwd_hash']
+                            email = message['email']
+                        except KeyError as e:
+                            errmsg = 'no record found with name %s'%e
+                            log.error(errmsg)
+                            return {"error":errmsg}
+                        log.info('new user id %s emaii %s'%(user_id, email))
+                        # Issue an auth token
+                        token = self.register_user(user_id, pwd_hash, email)
+                        if not user_id:
+                            user_id = gen_user_id()
+                        if not token:
+                            return {"error":'auth error'}
+                        # return an action field to so the webserver knows to rememner
+                        return {"user_id":user_id,"token":"%s"%token,'action':message['action']}
 
             if action=='get':
                 return self.db.get_all()
