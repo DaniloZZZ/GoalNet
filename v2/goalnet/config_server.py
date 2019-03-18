@@ -32,7 +32,7 @@ def _get_netconfig():
             'websocket':base_addr + '9105',
             'login':base_addr + '9106',
 
-            'database':base_addr + '9014',
+            'database_mod':base_addr + '9014',
             'vksleep':base_addr + '9013',
             'logger':base_addr + '9011',
             'echo':base_addr + '9012',
