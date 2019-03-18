@@ -66,20 +66,31 @@ async def server_start(netapi, storage):
     PORT = 3032
     async def on_connect(request):
         log.debug("new connection to ws path %s"%request.url)
-        ws = await request.accept()
-        message = await ws.get_message()
-        token = json.loads(message).get('token')
-        user_id = storage.sessman.check_token(token)
-        print(user_id)
-        if not user_id:
-            # invalid user
-            log.error("ws token not found %s"%token)
-            await ws.aclose(1008,reason="auth")
-            return
-
-        log.info("got new websock connection from id %s"%user_id)
-        storage.add_connection(ws,user_id)
+        user_id = 0
         try:
+            ws = await request.accept()
+            message = await ws.get_message()
+            try:
+                json.loads(message)
+            except Exception as e:
+                log.error("Ser error %s"%e)
+                await ws.aclose(1008,reason="auth")
+                return
+            token = json.loads(message).get('token')
+            user_id = storage.sessman.check_token(token)
+            ####
+            ###@@@@ DEBUG
+            if token=='machine':
+                user_id=1
+            print(user_id)
+            if not user_id:
+                # invalid user
+                log.error("ws token not found %s"%token)
+                await ws.aclose(1008,reason="auth")
+                return
+
+            log.info("got new websock connection from id %s"%user_id)
+            storage.add_connection(ws,user_id)
             while True:
                 message = await ws.get_message()
                 log.info("got new message from id %s"%user_id)
@@ -90,7 +101,8 @@ async def server_start(netapi, storage):
                 await trio.sleep(0)
 
         except ConnectionClosed:
-            storage.remove_connection(user_id)
+            if user_id:
+                storage.remove_connection(user_id)
             log.info("websocket user %s ended connection"%user_id)
 
     async with trio.open_nursery() as nursery:
