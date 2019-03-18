@@ -77,12 +77,12 @@ class TestModules(unittest.TestCase):
         print("\nLogin done, waiting a bit")
         time.sleep(.05)
         msgauth = {'token':token}
-        print("\nmaking request")
+        print("\nMaking  a valid request")
         resp = ws_req_rep(self.url, [msgauth,msg])
         print("\nIN<<\n",resp)
 
         msgauth = {'token':"oxdeadbeef"}
-        print("\nmaking request")
+        print("\nMaking an invalid request")
         try:
             resp = ws_req_rep(self.url, [msgauth,msg])
         except ConnectionClosed as e:
