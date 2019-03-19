@@ -50,14 +50,14 @@ def start_module(name):
 def start_connector():
     start_config_server()
 
-def start_mux(parallel=False):
+def start_mux(parallel=True):
     return conf_start_node(
         MUX,
         'MUX',
         parallel=parallel
     )
 
-def start_dmx(connectors=[], parallel=False):
+def start_dmx(connectors=[], parallel=True):
     return conf_start_node(
         DMX,
         'DMX',

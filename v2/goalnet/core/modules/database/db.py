@@ -10,6 +10,7 @@ from goalnet.helpers.log_init import log
 
 from goalnet.utils import get_network_config, get_action_path
 from goalnet.helpers import StatData
+from goalnet.core.database.api import with_db_api
 from ..AsyncBaseModule import AsyncModule
 
 class ArrayDB:
@@ -28,11 +29,12 @@ def gen_token():
     t = time.time().as_integer_ratio()[0]*random.randint(0,1000)
     return hex(t)
 
+@with_db_api
 class DataBaseModule(AsyncModule):
     """
     A simple module that logs everything and does nothing afterwards
     """
-    def __init__(self, netconf,name='database'):
+    def __init__(self, netconf, name='database_mod'):
         super().__init__(netconf, name=name)
         self.db = ArrayDB()
         self.auth = {}
@@ -41,14 +43,24 @@ class DataBaseModule(AsyncModule):
     def register_user(self, user_id, pwd_hash, email):
         #TODO: what if user_id exists?
         # can an attacker overwrite credentials?
-        existing_ = self.auth.get(user_id)
+        existing_ = self.db_call({
+            'request':'get.user',
+            'email':email
+        })
+        print("existing_",existing_)
         if existing_:
-            if pwd_hash!=existing_:
+            if pwd_hash!=existing_['pwd_hash']:
                 return None
             else:
                 return gen_token()
         else:
-            self.auth[user_id] = {'pwd_hash':pwd_hash,'email':email}
+            self.db_call({
+                'request':'new.user',
+                'email':email,
+                'user_id':user_id,
+                'pwd_hash':pwd_hash,
+                'remixid':"to be stored in cookie"
+            })
             return gen_token()
 
     async def node_fun(self,message,drain):
