@@ -1,6 +1,7 @@
 import unittest
 import multiprocessing as proc
 import logging, time, json
+import websocket as ws
 
 import trio
 from trio_websocket import open_websocket_url
@@ -35,12 +36,14 @@ class TestWebsocket(unittest.TestCase):
         proc = processed(start_websocket, name='ws-connector')
         url = 'ws://127.0.0.1:3032'
         time.sleep(0.1)
-        message_out = {'action':'world'}
-        message = trio.run(make_request, url, json.dumps(message_out))
+        conn = ws.create_connection(url)
+        message_out = {'action':'world','token':'machine'}
+        conn.send(json.dumps(message_out))
+        message = conn.recv()
         notif = json.loads(message)
+        print("RECV",message)
         assert notif['action']==message_out['action']
-        print(message)
-        #proc.terminate()
+        proc.terminate()
         proc.join()
 
     def tearDown(self):

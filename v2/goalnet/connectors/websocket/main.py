@@ -2,11 +2,38 @@ import trio
 import json
 from trio_websocket import serve_websocket, ConnectionClosed
 from goalnet.helpers.trio_tracer import Tracer
+import jwt
 
 from goalnet.utils import get_network_config
 from .. import NetworkAPI
 from .storage import Storage
 from goalnet import log
+
+async def debug_handle():
+    log.info("debug develop packet received")
+
+async def verified_user_id(message):
+    try:
+        action = json.loads(message)
+        # Get token, return if not specified
+        token = action.get("token")
+        if not token: return
+
+        # DEBUG
+        if token == 'machine':
+            debug_handle()
+            return 1
+
+        # decode the JWT token, get user_id from it
+        try:
+            identity = jwt.decode(token, 'secret', alorithms=['HS256'])
+            return identity['user_id']
+        except jwt.DecodeError as e:
+            return
+
+    except json.JSONDecodeError as e:
+        log.error("JSON decode error %s"%e)
+        return
 
 async def echo_server(request):
     ws = await request.accept()
@@ -66,38 +93,32 @@ async def server_start(netapi, storage):
     PORT = 3032
     async def on_connect(request):
         log.debug("new connection to ws path %s"%request.url)
-        user_id = 0
         try:
+            # accept connection, check JWT and get user_id from it
             ws = await request.accept()
             message = await ws.get_message()
-            try:
-                json.loads(message)
-            except Exception as e:
-                log.error("Ser error %s"%e)
-                await ws.aclose(1008,reason="auth")
-                return
-            token = json.loads(message).get('token')
-            user_id = storage.sessman.check_token(token)
-            ####
-            ###@@@@ DEBUG
-            if token=='machine':
-                user_id=1
-            print(user_id)
+            user_id = await verified_user_id(message)
             if not user_id:
-                # invalid user
-                log.error("ws token not found %s"%token)
+                log.error("Auth error for message %s"%message)
                 await ws.aclose(1008,reason="auth")
                 return
 
             log.info("got new websock connection from id %s"%user_id)
             storage.add_connection(ws,user_id)
+
+
+            action = json.loads(message)
+            action['user_id'] = user_id
+            netapi.send(action)
+            ###
             while True:
                 message = await ws.get_message()
                 log.info("got new message from id %s"%user_id)
                 ###
-                msg = json.loads(message)
-                msg['user_id'] = user_id
-                netapi.send(msg)
+                action = json.loads(message)
+                action['user_id'] = user_id
+                netapi.send(action)
+                ###
                 await trio.sleep(0)
 
         except ConnectionClosed:
