@@ -3,6 +3,7 @@ from .main import start_module
 from .main import start_mux
 from .main import start_dmx
 from .main import start_cnf
+from .core.database.database import start_database
 from .utils import get_network_config
 from .config_server import read_config
 from .helpers.log_init import log

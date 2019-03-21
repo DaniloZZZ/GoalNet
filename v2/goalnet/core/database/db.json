@@ -1,1 +1,1 @@
-{"null": {"request": "new.user", "email": "test@goalnet", "user_id": null, "pwd_hash": "oxo", "remixid": "to be stored in cookie"}}
+{"2097152": {"request": "new.user", "email": "example@goalnet.test", "user_id": 2097152, "pwd_hash": "0xDEAD:BEEF", "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMDk3MTUyfQ.5VCcWzxjBNKemK13WnbwIp03DMBReMejqjnahIPA5SM"}}

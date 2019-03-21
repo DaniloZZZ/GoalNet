@@ -5,6 +5,7 @@ Created by Danil Lykov @danlkv on 06/03/19
 from pprint import pprint
 import multiprocessing as prc
 import time, random
+import jwt
 
 from goalnet.helpers.log_init import log
 
@@ -25,9 +26,9 @@ class ArrayDB:
 
 def gen_user_id():
     return time.time().as_integer_ratio()[1]
-def gen_token():
-    t = time.time().as_integer_ratio()[0]*random.randint(0,1000)
-    return hex(t)
+def gen_token(user_id):
+    t = jwt.encode({'user_id':user_id},'secret',algorithm='HS256')
+    return t.decode()
 
 @with_db_api
 class DataBaseModule(AsyncModule):
@@ -40,28 +41,31 @@ class DataBaseModule(AsyncModule):
         self.auth = {}
         self.statdata = StatData()
 
-    def register_user(self, user_id, pwd_hash, email):
+
+    def register_user(self, pwd_hash, email):
         #TODO: what if user_id exists?
         # can an attacker overwrite credentials?
         existing_ = self.db_call({
             'request':'get.user',
             'email':email
         })
-        print("existing_",existing_)
         if existing_:
+            user_id = existing_['user_id']
             if pwd_hash!=existing_['pwd_hash']:
-                return None
+                return user_id, None
             else:
-                return gen_token()
+                return user_id, gen_token(user_id)
         else:
+            user_id = gen_user_id()
+            token =gen_token(user_id)
             self.db_call({
                 'request':'new.user',
                 'email':email,
                 'user_id':user_id,
                 'pwd_hash':pwd_hash,
-                'remixid':"to be stored in cookie"
+                'token':token
             })
-            return gen_token()
+            return user_id, token
 
     async def node_fun(self,message,drain):
         log.info('message: %s'%message)
@@ -83,7 +87,6 @@ class DataBaseModule(AsyncModule):
             if module=='user':
                 if target=='auth':
                     if action=='add':
-                        user_id = message.get('user_id')
                         # get user identity
                         try:
                             pwd_hash = message['pwd_hash']
@@ -92,13 +95,12 @@ class DataBaseModule(AsyncModule):
                             errmsg = 'no record found with name %s'%e
                             log.error(errmsg)
                             return {"error":errmsg}
-                        log.info('new user id %s emaii %s'%(user_id, email))
+                        log.info('new emaii %s'%( email))
                         # Issue an auth token
-                        token = self.register_user(user_id, pwd_hash, email)
-                        if not user_id:
-                            user_id = gen_user_id()
+                        user_id, token = self.register_user( pwd_hash, email)
                         if not token:
                             return {"error":'auth error'}
+                        # generate a user id if no id provided
                         # return an action field to so the webserver knows to rememner
                         return {"user_id":user_id,"token":"%s"%token,'action':message['action']}
 
@@ -110,6 +112,8 @@ class DataBaseModule(AsyncModule):
                 return response({'status':0,'db_len':self.db.len()})
         ## Parse action 
         action_path = get_action_path(message)
+        if len(action_path)!=3:
+            return response({'error':'action path is invalid'})
         if action_path:
             action = action_path[0]
             module = action_path[1]

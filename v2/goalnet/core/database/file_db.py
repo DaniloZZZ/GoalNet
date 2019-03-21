@@ -1,5 +1,5 @@
 
-import json 
+import json
 import logging as log
 
 def updates_db(method):
@@ -32,12 +32,16 @@ class FileDB:
         uid = user['user_id']
         log.debug("new user %s"%user)
         self.db[uid]=user
-        
+
     def user_by_id(self, uid):
         return self.db[uid]
     def user_by_email(self, email):
         for uid, u in self.db.items():
-            print("uid",uid,email,u)
             if u.get('email')==email:
+                return u
+    def user_by_token(self, token):
+        log.debug("looking for user of token %s"%token)
+        for uid, u in self.db.items():
+            if u.get('token')==token:
                 return u
 

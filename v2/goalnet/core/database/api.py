@@ -12,8 +12,14 @@ class DatabaseAPI:
         log.debug("sending '%s' to db"%request)
         self.s.send_json(request)
         return self.s.recv_json()
-    
-# a wrapper class to inherit db get from
+
+    def user_by_token(self,token):
+        return self.get({
+            'request':'get.user',
+            'token':token
+        })
+
+# a wrapper class to inherit db_call method 
 def with_db_api(Cls):
     class WithDB_API(Cls, DatabaseAPI):
         def __init__(self, netconf, *args, **kwargs):

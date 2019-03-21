@@ -29,11 +29,16 @@ class Database(DBNode):
                 self.db.new_user(**message)
                 return {"status":0}
             if action=='get':
-                uid,email = message.get("uid"), message.get('email')
+                uid, email, token = (message.get("uid"),
+                                     message.get('email'),
+                                     message.get('token')
+                                    )
                 if uid:
                     return self.db.user_by_id(uid)
                 if email:
                     return self.db.user_by_email(email)
+                if token:
+                    return self.db.user_by_token(token)
 
 
 def start_database():
