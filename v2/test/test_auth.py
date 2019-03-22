@@ -54,13 +54,13 @@ class TestModules(unittest.TestCase):
             self.wsproc,
             self.flask
         ]:
-            p.terminate()
+            #p.terminate()
             p.join()
         self.db_node.terminate()
         print("done")
 
     def login(self,email,pwd):
-        auth_payload={'email':email,'pwd_hash':pwd}
+        auth_payload={'email':email,'pwd':pwd}
         r = requests.post( self.login_url, data=auth_payload , allow_redirects=False)
         print("login: response.text\n",r.text)
         print("login: response.cookies\n",r.cookies)

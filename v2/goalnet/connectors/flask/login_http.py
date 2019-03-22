@@ -1,9 +1,13 @@
 from flask import Flask, request, jsonify, redirect,make_response
+from flask_cors import CORS
+import json
+
 from goalnet.utils import get_network_config
 from goalnet.core.database.api import with_db_api
 import logging as log
 from .. import NetworkAPI
 app = Flask("login app")
+CORS(app)
 FLASK_PORT = 8919
 
 @with_db_api
@@ -35,14 +39,25 @@ def start_app(netapi):
     @app.route('/login',methods=["GET","POST"])
     def login_page():
         if request.method == 'POST':
-            email = request.form['email']
-            pwd = request.form['pwd_hash']
+            if len(request.data)>0:
+                form = json.loads(request.data)
+            else:
+                form = request.form
+            try:
+                email = form['email']
+                pwd = form['pwd']
+            except KeyError as e:
+                return "auth err",401
+            hash = lambda x:x #this is temporary
+            pwd = hash(pwd)
 
             netapi.send({'action':'add.user.auth','email':email,'pwd_hash':pwd})
             doc = netapi.recv()
             netapi.reply_notif("OK")
             log.debug("got doc %s"%doc)
             response = make_response(redirect(APP_PAGE, 302))
+            header = response.headers
+            header['Access-Control-Allow-Origin'] = '*'
             response.set_cookie('token', value=doc['token'])
             return response
         else:
