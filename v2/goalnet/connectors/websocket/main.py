@@ -1,5 +1,6 @@
 import trio
 import json
+from http.cookies import SimpleCookie
 from trio_websocket import serve_websocket, ConnectionClosed
 from goalnet.helpers.trio_tracer import Tracer
 import jwt
@@ -12,11 +13,19 @@ from goalnet import log
 async def debug_handle():
     log.info("debug develop packet received")
 
-async def verified_user_id(message):
+async def verified_user_id(message,request):
+    print("VUI")
     try:
         action = json.loads(message)
         # Get token, return if not specified
         token = action.get("token")
+        headers = {k.decode():v.decode() for k,v in request.headers}
+        print("H",headers)
+        cookies = SimpleCookie(headers.get('cookie'))
+        print("C", cookies)
+        for key, morsel in cookies.items():
+            if key=='token':
+                token = morsel.value
         if not token: return
 
         # DEBUG
@@ -93,11 +102,12 @@ async def server_start(netapi, storage):
     PORT = 3032
     async def on_connect(request):
         log.debug("new connection to ws path %s"%request.url)
+        user_id = 0
         try:
             # accept connection, check JWT and get user_id from it
             ws = await request.accept()
             message = await ws.get_message()
-            user_id = await verified_user_id(message)
+            user_id = await verified_user_id(message, request)
             if not user_id:
                 log.error("Auth error for message %s"%message)
                 await ws.aclose(1008,reason="auth")

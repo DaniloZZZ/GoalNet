@@ -119,6 +119,7 @@ class DataBaseModule(AsyncModule):
             module = action_path[1]
             target = action_path[2]
             resp = handle_action(message,action,module,target)
+            log.debug('responding %s'%resp)
             return response(resp)
 
         return response({"error":'No action field'})
