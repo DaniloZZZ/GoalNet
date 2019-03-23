@@ -52,9 +52,12 @@ def start_app(netapi):
             pwd = hash(pwd)
 
             netapi.send({'action':'add.user.auth','email':email,'pwd_hash':pwd})
-            doc = netapi.recv()
-            log.debug("Received %s"%doc)
-            netapi.reply_notif("OK")
+            doc = {}
+            # Temorary patch
+            while not doc.get('token'):
+                doc = netapi.recv()
+                log.debug("Received %s"%doc)
+                netapi.reply_notif("OK")
             log.debug("got doc %s"%doc)
             response = make_response(redirect(APP_PAGE, 302))
             header = response.headers
