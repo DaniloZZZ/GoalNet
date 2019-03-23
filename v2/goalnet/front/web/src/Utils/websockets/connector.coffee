@@ -25,13 +25,11 @@ export class DataSource
 export class Connector
 	constructor:({api_path}) ->
 		@api_path = api_path
-		#@connect(api_path)
 
 	connect:(api_path)->
 		# if provided argument, update the api_path
 		if api_path
 			@api_path = api_path
-			console.log 'Updated api_path for socket to', api_path
 		console.log 'Starting websocket connectiton to', @api_path
 		@socket = new WebSocket(@api_path)
 		@connected = false
@@ -41,11 +39,9 @@ export class Connector
 		@socket.onclose =  @onClose
 		@socket.onerror =  @onError
 
-
 	onMessage:(event)=>
-		console.log 'message got', event
+		console.log 'WebSocket got', event
 		message = JSON.parse(event.data)
-		console.log 'this in conn', @
 		@callback(message)
 
 	####
@@ -58,14 +54,14 @@ export class Connector
 	onClose:()=>
 		@connected = false
 		console.info 'Websocket closed', @api_path
-		@on_state_change('close')
+		@on_state_change('closed')
 
 	onError:(e)=>
 		console.error 'Error from socket', e
 		@on_state_change('error',e)
 	####
 
-	on_state_change:(state, event)->
+	on_state_change:(state, event)=>
 		if @onStateChange
 			@onStateChange state, event
 	close:()=>

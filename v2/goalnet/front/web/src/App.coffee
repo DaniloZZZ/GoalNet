@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import L from 'react-dom-factories'
-import { BrowserRouter as Router, Route, Redirect, Link } from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom"
 import 'babel-polyfill'
 import 'react-big-calendar/lib/less/styles.less'
 import LoginPage from './Pages/login/login.coffee'
-import WelcomePage from './Pages/welcome/welcome.coffee'
+import LandingPage from './Pages/landing/main.coffee'
 import HomePage from './Pages/home/home.coffee'
 import VkAuthPage from './Pages/vk/auth.coffee'
 import StatsPage from './Pages/statistics/stats.coffee'
@@ -43,33 +43,25 @@ export default class App extends React.Component
       L_ WaitAuth, 0,0
     else
       if not @state.uid
-            console.log('notlogged')
-            L_ Redirect, to:'/welcome',0
-          else
-            console.log('logged')
-            component
+          console.log('notlogged')
+          L_ Redirect, to:'/',0
+        else
+          console.log('logged')
+          component
      
   render: ->
-    console.log('rendering',this)
-    L_ Router, null,
+    console.log('App render. app:',this)
+    appComponent = ()=>
+      console.log 'rendering app'
       L.div 0,
-        L.div 0,
-          L_ Menu,0,0
+        L_ Menu
         L.div className:'main',
           L_ Route,
             exact: true
             path:'/'
             render: =>
-              if not @state.auth_checked
-                L_ WaitAuth, 0,0
-              else
-                @welcomeOrComponent L_ HomePage, uid:@state.uid,0
-          L_ Route,
-            path:'/welcome'
-            component:WelcomePage
-          L_ Route,
-            path:'/login'
-            component:LoginPage
+              console.log 'route /'
+              L_ HomePage, uid:@state.uid
           L_ Route,
             path:'/vkauth'
             render: =>
@@ -94,6 +86,20 @@ export default class App extends React.Component
             path:'/ADMIN'
             render: =>
               @welcomeOrComponent L_ AdminPage, uid:@state.uid,0
+
+    L_ Router, null,
+      L.div 0,
+        L_ Switch,0,
+          L_ Route,
+            path:'/login'
+            component:LoginPage
+          L_ Route,
+            path:'/'
+            render: ()=>
+              if @state.uid
+                return appComponent()
+              else
+                L_ LandingPage
 
 WaitAuth= ()->
   L.div 0,

@@ -5,82 +5,89 @@ import style from './connection.less'
 L_ = React.createElement
 
 export default class Widget extends React.Component
-	state :
-		connected:false
-		waiting:false
-		error:""
-		addr:""
+    state :
+        connected:false
+        waiting:false
+        path: 'ws://localhost:3032'
+        error:""
+        addr:""
 
-	constructor:(props)->
-		super(props)
-		{connector} = props
-		if connector
-			connector.setOnStateChange(@onConnectorStateChange)
-			@connector = connector
-		else
-			@state.status='error'
-			@state.error='failed to init'
+    constructor:(props)->
+        super(props)
+        {connector} = props
+        if connector
+            connector.setOnStateChange(@onConnectorStateChange)
+            @connector = connector
+        else
+            @state.error='No connector provded to widget'
+        @state.path = @connector.api_path
 
-	onConnectorStateChange:(state_id)=>
-		switch state_id
-			when 'open' then @onOpen()
-			when 'error' then @onError()
-			when 'closed' then @onClosed()
+    onConnectorStateChange:(state_id, event)=>
+        switch state_id
+            when 'open' then @onOpenedConn()
+            when 'error' then @onError(event)
+            when 'closed' then @onClose()
 
-	getStatus:()->
-		{connected,error,waiting} = @state
-		console.log 'Current connection status', connected
-		status = if connected then 'connected' else 'disconnected'
-		console.log 'Current connection status', status
-		if waiting
-			status = 'waiting'
-		if error
-			status = 'error'
-		console.log 'Current connection status', status
-		status
+    doAction:(e)=>
+        status = @getStatus()
+        switch status
+            when 'connected' then @disconnect()
+            when 'error' then @reconnect()
+            when 'disconnected' then @reconnect()
 
-	onStart:->
-		@setState connected:false, waiting:true, addr:@connector.api_path
-	onOpen:->
-		@setState connected:true, waiting:false, error:'', addr:@connector.api_path
-	onClose:->
-		@setState connected:false, addr:@connector.api_path
-	onError:(err)->
-		@setState 
-			connected:false
-			addr:@connector.api_path
-			error:err
+    getStatus:()->
+        {connected, error, waiting} = @state
+        console.log 'Current connection status', connected
+        status = if connected then 'connected' else 'disconnected'
+        if waiting
+            status = 'waiting'
+        if error
+            status = 'error'
+        console.log 'Next connection status', status
+        status
 
-	doAction:(e)=>
-		status = @getStatus()
-		switch status
-			when 'connected' then @disconnect()
-			when 'error' then @reconnect()
-			when 'disconnected' then @reconnect()
+    onStart:->
+        @setState connected:false, waiting:true, error:null
+    onOpenedConn:->
+        @setState connected:true, waiting:false
+    onClose:->
+        @setState connected:false
+    onError:(err)->
+        console.log 'errror', err
+        @setState
+            connected:false
+            waiting:false
+            error:err
+    update_path:(e)=>
+        console.log 'upd', e.target
+        path =  e.target.value
+        @setState path:path
 
-	disconnect:()->
-		@connector.close()
-		@onClose()
-	reconnect:()->
-		@connector.connect()
-
+    disconnect:()->
+        @connector.close()
+        @onClose()
+    reconnect:()->
+        @connector.connect(@state.path)
+        @onStart()
     
-	render: ->
-		status = @getStatus()
-		action_text = switch status 
-			when 'connected' then 'Disconnect'
-			when 'disconnected' then 'Reconnect'
-			when 'error' then 'Reconnect'
+    render: ->
+        status = @getStatus()
+        action_text = switch status
+            when 'connected' then 'Disconnect'
+            when 'disconnected' then 'Connect'
+            when 'error' then 'Reconnect'
 
-		L.div className:'widget',
-			L.div 
-				className:'status '+status,
-				L.p className:'text'
-					status
-			L.div
-				className:'act button'
-				onClick:@doAction
-				action_text
+        L.div className:'widget',
+            L.div
+                className:'status '+status,
+                L.p className:'text'
+                    status
+            L.div className:'ws-addr',
+                L.input type:'text',value:@state.path, onChange:@update_path
+            L.div
+                className:'act button'
+                onClick:@doAction
+                action_text
 
 
 
