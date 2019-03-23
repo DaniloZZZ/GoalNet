@@ -17,7 +17,9 @@ export logged_in = ()->
       return data.user_id
 
     return false
+
 export log_out = ()->
+  deleteAllCookies()
   await remove_session()
 
 export debug_login = ()->
@@ -27,3 +29,7 @@ getCookie=(name) ->
     "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
   ))
   return if matches then decodeURIComponent(matches[1]) else undefined
+
+deleteAllCookies = ->
+  console.log 'delc'
+  document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
