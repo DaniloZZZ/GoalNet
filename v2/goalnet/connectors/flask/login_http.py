@@ -53,6 +53,7 @@ def start_app(netapi):
 
             netapi.send({'action':'add.user.auth','email':email,'pwd_hash':pwd})
             doc = netapi.recv()
+            log.debug("Received %s"%doc)
             netapi.reply_notif("OK")
             log.debug("got doc %s"%doc)
             response = make_response(redirect(APP_PAGE, 302))
