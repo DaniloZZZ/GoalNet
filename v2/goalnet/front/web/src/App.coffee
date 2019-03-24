@@ -3,6 +3,7 @@ import L from 'react-dom-factories'
 import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom"
 import 'babel-polyfill'
 import 'react-big-calendar/lib/less/styles.less'
+
 import LoginPage from './Pages/login/login.coffee'
 import LandingPage from './Pages/landing/main.coffee'
 import HomePage from './Pages/home/home.coffee'
@@ -12,11 +13,14 @@ import CalendarPage from './Pages/calendar/calendar.coffee'
 import SettingsPage from './Pages/settings/settings.coffee'
 import ProjectsPage from './Pages/projects/projects.coffee'
 import AdminPage from './admin/config/page.coffee'
+
+import GnetAPI from './Utils/gnetAPI/gnetAPI.coffee'
 import {logged_in,debug_login} from './Utils/sessions.coffee'
 import Menu from './Modules/menu/menu.coffee'
 L_ = React.createElement
 
 ##
+API_PATH = 'ws://localhost:8919/'
 
 
 export default class App extends React.Component
@@ -25,6 +29,7 @@ export default class App extends React.Component
     super()
     @state.logged_in = false
     @state.auth_checked = false
+    @api = new GnetAPI(API_PATH)
     @check_login()
 
   check_login: ->
@@ -53,6 +58,9 @@ export default class App extends React.Component
     console.log('App render. app:',this)
     appComponent = ()=>
       console.log 'rendering app'
+      boundComponent = (component)=>
+        @welcomeOrComponent L_ component, uid:@state.uid,api:@state.api
+
       L.div 0,
         L_ Menu
         L.div className:'main',
@@ -64,28 +72,22 @@ export default class App extends React.Component
               L_ HomePage, uid:@state.uid
           L_ Route,
             path:'/vkauth'
-            render: =>
-              @welcomeOrComponent L_ VkAuthPage, uid:@state.uid,0
+            render: => boundComponent VkAuthPage
           L_ Route,
             path:'/statistics'
-            render: =>
-              @welcomeOrComponent L_ StatsPage,uid:@state.uid,0
+            render: => boundComponent StatsPage
           L_ Route,
             path:'/calendar'
-            render: =>
-              @welcomeOrComponent L_ CalendarPage, uid:@state.uid,0
+            render: => boundComponent CalendarPage
           L_ Route,
             path:'/settings'
-            render: =>
-              @welcomeOrComponent L_ SettingsPage, uid:@state.uid,0
+            render: => boundComponent SettingsPage
           L_ Route,
             path:'/projects'
-            render: =>
-              @welcomeOrComponent L_ ProjectsPage, uid:@state.uid,0
+            render: => boundComponent ProjectsPage
           L_ Route,
             path:'/ADMIN'
-            render: =>
-              @welcomeOrComponent L_ AdminPage, uid:@state.uid,0
+            render: => boundComponent AdminPage
 
     L_ Router, null,
       L.div 0,
