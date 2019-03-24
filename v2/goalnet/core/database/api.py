@@ -18,6 +18,18 @@ class DatabaseAPI:
             'request':'get.user',
             'token':token
         })
+    def get_modules(self,user_id):
+        return self.get({
+            'request':'get.module',
+            'user_id':user_id,
+        })
+    def add_module(self,user_id,module):
+        return self.get({
+            'request':'add.module',
+            'user_id':user_id,
+            'name':module
+        })
+
 
 # a wrapper class to inherit db_call method 
 def with_db_api(Cls):

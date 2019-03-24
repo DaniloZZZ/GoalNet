@@ -39,6 +39,12 @@ class Database(DBNode):
                     return self.db.user_by_email(email)
                 if token:
                     return self.db.user_by_token(token)
+        if trait=='module':
+            if action=='add':
+                self.db.add_module(**message)
+            if action=='get':
+                return self.db.get_modules(**message)
+
 
 
 def start_database():

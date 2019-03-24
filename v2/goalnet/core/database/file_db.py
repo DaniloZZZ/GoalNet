@@ -14,6 +14,7 @@ class FileDB:
         self._read_db()
 
     def _write_db(self):
+        print("selfld",self.db)
         with open(self.fname, 'w+') as f:
             json.dump(self.db,f)
     def _read_db(self):
@@ -34,6 +35,7 @@ class FileDB:
         self.db[uid]=user
 
     def user_by_id(self, uid):
+        uid =int(uid)
         return self.db[uid]
     def user_by_email(self, email):
         for uid, u in self.db.items():
@@ -44,4 +46,25 @@ class FileDB:
         for uid, u in self.db.items():
             if u.get('token')==token:
                 return u
+    
+    @updates_db
+    def add_module(self,user_id, name, **k):
+        log.debug("addin module user %s"%user_id)
+        print(type(user_id))
+        usr = self.user_by_id(user_id)
+        try:
+            m = usr['modules']
+        except KeyError:
+            usr['modules'] = []
+        usr['modules'].append(name)
+        
+    def get_modules(self, user_id, **k):
+        log.debug("getting module user %s"%user_id)
+        usr = self.user_by_id(user_id)
+        try:
+            m = usr['modules']
+        except KeyError:
+            usr['modules'] = []
+        return usr['modules']
+
 
