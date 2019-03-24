@@ -20,6 +20,8 @@ module.exports =
     options: path.join(__dirname, "src", "options", "options.coffee"),
     background: path.join(__dirname, "src", "background", "background.coffee")
     content: path.join(__dirname, "src", "content", "content.coffee")
+  devServer:
+    disableHostCheck: true
   output:
     path: path.join(__dirname, "build"),
     filename: "[name].bundle.js"
