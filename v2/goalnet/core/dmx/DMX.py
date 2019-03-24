@@ -27,15 +27,35 @@ def DMX(my_name, network_config, connectors=[]):
     for name, addr in conn_addr:
         sock = ctx.socket(zmq.REQ)
         sock.connect(addr)
-        sockets[name] = sock
+        if name=='login':
+            trig='auth'
+        else:
+            trig = ''
+        sockets[name] = {'socket': sock,'trig':trig}
     ###<
     while True:
         notif = source.recv_json()
         log.debug("DMX in: %s"%notif)
-        for name,socket in sockets.items():
+        for name,props in sockets.items():
+            socket = props['socket']
+            target = notif.get('action')
+            if props['trig']:
+                if not target: continue
+                m = target.split('.')
+                if not len(m)>2: continue
+                if m[2]!=props['trig']:
+                    continue
             log.debug("Sending notif to %s connector"%name)
             socket.send_json(notif)
-        for name,socket in sockets.items():
+        for name,props in sockets.items():
+            socket = props['socket']
+            target = notif.get('action')
+            if props['trig']:
+                if not target: continue
+                m = target.split('.')
+                if not len(m)>2: continue
+                if m[2]!=props['trig']:
+                    continue
             log.debug("getting answer %s connector"%name)
             answer = socket.recv_string()
             log.debug('dmx %s answ %s'%(name,answer))
