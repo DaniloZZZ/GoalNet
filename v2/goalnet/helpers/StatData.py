@@ -72,10 +72,15 @@ class IntegralMetrics(Metrics):
 
         duration  =  end-start
         step = params.get('step', duration)
-        step_count = int(duration/step)
-        domain_points = 43+step_count
-        step_points = domain_points//step_count
-        dt = step/(step_points)
+        step_count = int(duration/step) if duration else 1
+        domain_points = 43+13*step_count
+        step_points = domain_points//step_count 
+        dt = duration/(step_points) 
+        log.debug("step count: %s, step_points: %s, step: %s"%(
+            step_count,
+            step_points,
+            step)
+        )
 
         domain = [ start + step*i for i in range(step_count) ] + [end]
         log.debug('domain for metrics: %s'%domain)

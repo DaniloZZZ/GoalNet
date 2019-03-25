@@ -107,6 +107,7 @@ async def server_start(netapi, storage):
             # accept connection, check JWT and get user_id from it
             ws = await request.accept()
             message = await ws.get_message()
+            log.debug("inital message %s"%message)
             user_id = await verified_user_id(message, request)
             if not user_id:
                 log.error("Auth error for message %s"%message)

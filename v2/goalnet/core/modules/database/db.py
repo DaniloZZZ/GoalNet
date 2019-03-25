@@ -51,6 +51,7 @@ class DataBaseModule(AsyncModule):
         })
         if existing_:
             user_id = existing_['user_id']
+            log.debug("User exists with id %s"%user_id)
             if pwd_hash!=existing_['pwd_hash']:
                 return user_id, None
             else:
@@ -79,11 +80,14 @@ class DataBaseModule(AsyncModule):
                 )
             return notif
         def handle_action(message, aciton, module, target):
-            if module == 'test':
+            if module == 'test' or module=='webext':
                 if target=='record':
-                    return self.statdata.record(message, action=action)
+                    res =  self.statdata.record(message, action=action)
+                    res.update({"action":module+".record"})
                 if target=='metrics':
-                    return self.statdata.metric(message, action=action)
+                    res = self.statdata.metric(message, action=action)
+                    res.update({"action":module+".metrics"})
+                return  res
             if module=='user':
                 if target=='auth':
                     if action=='add':
@@ -103,6 +107,17 @@ class DataBaseModule(AsyncModule):
                         # generate a user id if no id provided
                         # return an action field to so the webserver knows to rememner
                         return {"user_id":user_id,"token":"%s"%token,'action':message['action']}
+                if target=='module':
+                    if aciton=='add':
+                        user_id=message['user_id']
+                        name=message['name']
+                        self.add_module(user_id,name)
+                        modls = self.get_modules(user_id)
+                        return {"modules":modls,'action':'user.modules'}
+                    if aciton=='get':
+                        user_id=message['user_id']
+                        modls = self.get_modules(user_id)
+                        return {"modules":modls,'action':'user.modules'}
 
             if action=='get':
                 return self.db.get_all()

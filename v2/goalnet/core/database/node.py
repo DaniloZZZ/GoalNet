@@ -28,8 +28,7 @@ class DBNode:
             try:
                 response = self.connection_handler(msg)
             except Exception as e:
-                log.error(str(e))
-                raise e
+                log.error("Error in db: %s"%str(e))
                 response = {"error":str(e)}
             sock.send_json(response)
             time.sleep(0)

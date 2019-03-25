@@ -32,10 +32,12 @@ class FileDB:
     def new_user(self, **user):
         uid = user['user_id']
         log.debug("new user %s"%user)
+        uid =str(uid)
         self.db[uid]=user
 
     def user_by_id(self, uid):
-        uid =int(uid)
+        uid = str(uid)
+        log.debug("User ids in db: %s"%list(self.db.keys()))
         return self.db[uid]
     def user_by_email(self, email):
         for uid, u in self.db.items():

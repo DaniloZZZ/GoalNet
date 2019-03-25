@@ -39,10 +39,14 @@ def start_app(netapi):
     @app.route('/login',methods=["GET","POST"])
     def login_page():
         if request.method == 'POST':
+            js_request = False
             if len(request.data)>0:
+                log.debug("got from json")
                 form = json.loads(request.data)
+                js_request=True
             else:
                 form = request.form
+                log.debug("trying to read form")
             try:
                 email = form['email']
                 pwd = form['pwd']
@@ -59,10 +63,14 @@ def start_app(netapi):
                 log.debug("Received %s"%doc)
                 netapi.reply_notif("OK")
             log.debug("got doc %s"%doc)
-            response = make_response(redirect(APP_PAGE, 302))
+            token = doc['token']
+            if js_request:
+                response = make_response(jsonify({'token':token}))
+            else:
+                response = make_response(redirect(APP_PAGE, 302))
             header = response.headers
             header['Access-Control-Allow-Origin'] = '*'
-            response.set_cookie('token', value=doc['token'])
+            response.set_cookie('token', token)
             return response
         else:
             return show_the_login_form()
