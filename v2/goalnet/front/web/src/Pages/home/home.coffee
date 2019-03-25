@@ -14,3 +14,5 @@ export default class HomePage extends Component
   render: ->
     L.div null,
       L.h1 null, 'GoalNet'
+      L.div null,
+        "Use the service for a while and a more extensive statistics will appear here"
