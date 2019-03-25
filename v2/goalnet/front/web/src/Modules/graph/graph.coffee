@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import moment from 'moment'
 import Chart from 'react-apexcharts'
+import randomcolor from 'randomcolor'
 
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
 import L from 'react-dom-factories'
@@ -50,6 +51,6 @@ export default class Graph extends React.Component
                 L_ Legend
                 for name,i in @props.domain or []
                   console.log 'name', name
-                  L_ Bar, dataKey:name, key:i, stackId:'a', fill:'#'+(Math.random()*0xFFFFFF<<0).toString(16)
+                  L_ Bar, dataKey:name, key:i, stackId:'a', fill:randomcolor()
             L_ ParamPanel, onChanged:@onChange, params:@props.params
 
