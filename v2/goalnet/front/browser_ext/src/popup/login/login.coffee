@@ -7,7 +7,8 @@ import axios from 'axios'
 L_ = React.createElement
 import './login.less'
 
-GNET_LOGIN=  'http://localhost:8919/login'
+host = 'lykov.tech:8080'
+GNET_LOGIN=  'http://'+host+'/auth/login'
 
 export default class LoginPage extends Component
   constructor: (props)->

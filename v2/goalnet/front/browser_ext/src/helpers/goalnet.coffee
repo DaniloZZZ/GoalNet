@@ -1,4 +1,5 @@
-apipath = "ws://127.0.0.1:3032"
+host = 'lykov.tech'
+apipath = "ws://"+host+":3032"
 
 export default class GoalNetApi
   constructor:(props)->
