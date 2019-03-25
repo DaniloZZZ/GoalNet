@@ -1,44 +1,55 @@
 import React, { Component } from 'react'
 import moment from 'moment'
 import Chart from 'react-apexcharts'
+
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
 import L from 'react-dom-factories'
 import './graph.less'
 import ParamPanel from './paramsPanel.coffee'
 L_ = React.createElement
 
 export default class Graph extends React.Component
-  constructor:(props)->
-    super(props)
-    @onChange=props.onParamsChange
-    console.log('d',props.domain)
-    @chartOpt=
-      chart:
-        id: 'chart'
-      dataLabels:
-        enabled:false
-      xaxis:
-        type:'datetime'
-        categories:props.domain
-      tooltip:
-        x:
-          format:'hh:mm'
+    constructor:(props)->
+        super(props)
+        @onChange=props.onParamsChange
+        console.log('d',props.domain)
+        @chartOpt=
+            chart:
+                id: 'chart'
+            type: 'chart'
+            dataLabels:
+                enabled:false
+            xaxis:
+                type:'datetime'
+                categories:props.domain
+            tooltip:
+                x:
+                    format:'hh:mm'
+        if props.options
+            @chartOpt = Object.assign {}, @chartOpt, props.options
+        console.log 'Chart options', @chartOpt
 
-  render: ->
-    series= [{name:@props.name,data:@props.values}]
-    if @chartOpt.xaxis.type=='datetime'
-      data = []
-      for v ,i in @props.values
-        data.push
-          x:@props.domain[i]
-          y:v
-        series =[ data:data] 
+    get_series_from_values:(values)->
+        if not values
+            return [0,0,0]
+        return values
 
-    console.log 'dafsd',series
-    L.div className:'chart',
-      L_ Chart,
-        options:@chartOpt
-        series:series
-        type:'area'
-        height:500
-      L_ ParamPanel, onChanged:@onChange, params:@props.params
+    render: ->
+        series = @get_series_from_values(
+            @props.values)
+
+        console.log 'Graph: series',series
+        console.log 'Graph: domain',@props.domain
+        L.div className:'chart',
+            L_ BarChart,
+                data:@props.values
+                height:600
+                width:800
+                L_ XAxis, dataKey:'time', tickFormatter:(timeStr) => moment(timeStr*1000).format('HH:mm')
+                L_ YAxis
+                L_ Legend
+                for name,i in @props.domain or []
+                  console.log 'name', name
+                  L_ Bar, dataKey:name, key:i, stackId:'a', fill:'#'+(Math.random()*0xFFFFFF<<0).toString(16)
+            L_ ParamPanel, onChanged:@onChange, params:@props.params
 
