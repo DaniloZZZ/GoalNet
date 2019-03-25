@@ -47,7 +47,8 @@ export default class Graph extends React.Component
                 height:600
                 width:800
                 L_ XAxis, dataKey:'time', tickFormatter:(timeStr) => moment(timeStr*1000).format('HH:mm')
-                L_ YAxis
+                L_ YAxis, tickFormatter:(secStr)->moment.duration(secStr,'seconds').humanize()
+                L_ Tooltip, formatter:(secStr)->moment.duration(secStr,'seconds').humanize()
                 L_ Legend
                 for name,i in @props.domain or []
                   console.log 'name', name

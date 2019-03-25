@@ -31,7 +31,7 @@ export default class Page extends Component
       if metrics.name=='integral'
         @setState integral:metrics
     end = moment()
-    start = moment().subtract 2, 'hours'
+    start = moment().subtract 1, 'hours'
     console.log 'emd', end
     @api.get_integral_metrics
       name:'websites'

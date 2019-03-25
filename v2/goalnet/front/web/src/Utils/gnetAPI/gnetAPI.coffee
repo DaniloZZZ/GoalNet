@@ -35,7 +35,7 @@ export default class GnetAPI extends Connector
       providers:[name]
       end:end
       start:start
-      step:200
+      step:100
 
   get_connectors:(clb)->
       console.log 'getting connectors of',@uid
