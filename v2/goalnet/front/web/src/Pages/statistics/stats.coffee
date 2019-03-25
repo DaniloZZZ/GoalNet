@@ -6,7 +6,8 @@ import axios from 'axios'
 import moment from 'moment'
 
 import { Index, timeSeries } from "pondjs"
-import VkOnline from '../../Modules/Vk/stats.coffee'
+import VkOnline from '../../Modules/stats/vk.coffee'
+import WebExt from '../../Modules/stats/webext.coffee'
 
 import {Link } from "react-router-dom"
 host = window.location.hostname
@@ -20,15 +21,27 @@ zip = (arrays)->
 export default class Page extends Component
   state:
     data:null
+    integral:{}
 
-  constructor: ({uid})->
-    super()
-    @uid = uid
+  constructor: (props)->
+    super(props)
+    {@uid, @api} = props
+    @api.add_trigger 'webext.metrics', (metrics)=>
+      console.log 'tr', metrics
+      if metrics.name=='integral'
+        @setState integral:metrics
+    end = moment()
+    start = moment().subtract 2, 'hours'
+    console.log 'emd', end
+    @api.get_integral_metrics
+      name:'websites'
+      start:start.unix()
+      end:end.unix()
 
   render: ->
     L.div null,
-      L.h1 null,'Stats'
+      L.h2 null,'Statistics'
       L.div 0,
-        L_ VkOnline,uid:@uid,0
+        L_ WebExt, data:@state.integral
 
 

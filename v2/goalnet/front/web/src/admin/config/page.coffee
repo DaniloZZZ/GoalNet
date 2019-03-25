@@ -29,13 +29,12 @@ export default class Page extends React.Component
     constructor:(props)->
       super(props)
       api_path = get_api_path()
-      console.log 'apipath', api_path
-      @connector = new Connector(api_path:api_path)
-      @connector.onMessage = @onNotif
+      console.log 'apipath',props.api
+      @connector = props.api
+      @connector.add_callback @onNotif
 
     onNotif:(notif)=>
       @setState (s,p)->
-        notif = JSON.parse(notif.data)
         s.notifs.unshift notif
         if notif.data?
           s.graphData = notif

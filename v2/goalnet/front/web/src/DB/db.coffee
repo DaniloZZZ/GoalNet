@@ -12,7 +12,6 @@ export save_session = (user_id)->
 export remove_session = ()->
   db.sessions.toCollection().delete()
 
-
 export get_sessions = ->
   sessions = db.sessions.toArray()
   Dexie.waitFor(sessions)

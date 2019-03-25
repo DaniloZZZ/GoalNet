@@ -1,5 +1,6 @@
 import {extractDomain} from '../helpers/webtime.coffee'
 import CachedStorage from '../helpers/storage.coffee'
+import GoalNetApi from '../helpers/goalnet.coffee'
 
 if chrome
   browser=chrome
@@ -7,8 +8,13 @@ if chrome
 console.log "background"
 
 storage = new CachedStorage()
+browser.storage.local.get 'session',(result)=>
+  console.log 'got session', result
+  api = new GoalNetApi token:result.session?.token
+  storage.set_api api
 TIMEOUT_S = 20*1000
 timeoutId = 0
+
 
 userIdle=()->
   event =
@@ -36,11 +42,11 @@ handlePageEvent=(event)->
 
 browser.runtime.onMessage.addListener (request, sender, sendResponse) ->
     if sender.tab
-      console.log 'fron a content script:', sender.url
+      console.log 'message from a content script:', sender.url
     else
-      console.log 'from the ext'
-    [action, trait] = request.action.slpit('.')
-    if trait = 'event'
+      console.log 'message from the ext'
+    [action, trait] = request.action.split('.')
+    if trait == 'event'
       if action=='post'
         event =
           url:sender.url
@@ -50,4 +56,20 @@ browser.runtime.onMessage.addListener (request, sender, sendResponse) ->
       if action=='get'
         data = storage.get()
         sendResponse data
+    if trait=='session'
+      if action=='set'
+        if request.token?
+          token = request.token
+          browser.storage.local.set
+            session:
+              token:token
+        else
+          console.error 'wrong set session req'
+      if action=='get'
+        browser.storage.local.get 'session',(result)=>
+          console.log 'got session', result
+          sendResponse result
+    # use sendResponse asyncronously
+    return true
+
 

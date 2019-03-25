@@ -25,10 +25,9 @@ export default class Page extends Component
 
   constructor: ({uid})->
     super()
+    console.log 'Rendering calendar page'
     @uid= uid
     console.log(@state.events)
-
-
 
   render: ->
     localizer = BigCalendar.momentLocalizer(moment)

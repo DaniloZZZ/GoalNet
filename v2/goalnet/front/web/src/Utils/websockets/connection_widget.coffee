@@ -21,6 +21,7 @@ export default class Widget extends React.Component
         else
             @state.error='No connector provded to widget'
         @state.path = @connector.api_path
+        @state.connected = @connector.connected
 
     onConnectorStateChange:(state_id, event)=>
         switch state_id

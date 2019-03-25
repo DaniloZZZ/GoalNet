@@ -55,7 +55,8 @@ export default class VkOnline extends Component
         step:step
 
   render: ->
-    L.div null,
+    L.div className:'stats',
+      "VK online statistics"
       if @state.values
         L.div 0,
           L_ Graph,
@@ -66,6 +67,6 @@ export default class VkOnline extends Component
             values:@state.values
 
       else
-        L.h2 0, "No stats yet"
+        L.p 0, "No stats yet"
 
 

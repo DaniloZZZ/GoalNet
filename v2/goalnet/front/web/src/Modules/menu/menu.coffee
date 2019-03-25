@@ -28,5 +28,3 @@ export default Menu = ()->
       L.button onClick:onlog_out, 'log out'
 
 
-
-

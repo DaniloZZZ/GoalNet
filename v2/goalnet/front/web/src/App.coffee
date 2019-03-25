@@ -20,7 +20,7 @@ import Menu from './Modules/menu/menu.coffee'
 L_ = React.createElement
 
 ##
-API_PATH = 'ws://localhost:8919/'
+API_PATH = 'ws://localhost:3032'
 
 
 export default class App extends React.Component
@@ -29,12 +29,14 @@ export default class App extends React.Component
     super()
     @state.logged_in = false
     @state.auth_checked = false
-    @api = new GnetAPI(API_PATH)
+    @api = new GnetAPI api_path:API_PATH
+    @api.connect()
     @check_login()
 
   check_login: ->
     logged_in().then (uid)=>
       console.log 'uid',uid
+      @api.set_uid uid
       if not uid
         console.log "not logged in!"
         @setState auth_checked:true, uid:false
@@ -58,8 +60,8 @@ export default class App extends React.Component
     console.log('App render. app:',this)
     appComponent = ()=>
       console.log 'rendering app'
-      boundComponent = (component)=>
-        @welcomeOrComponent L_ component, uid:@state.uid,api:@state.api
+      boundComponent = (component)=>(route)=>
+        @welcomeOrComponent L_ component, uid:@state.uid, api:@api, route:route
 
       L.div 0,
         L_ Menu
@@ -72,22 +74,22 @@ export default class App extends React.Component
               L_ HomePage, uid:@state.uid
           L_ Route,
             path:'/vkauth'
-            render: => boundComponent VkAuthPage
+            render: boundComponent VkAuthPage
           L_ Route,
             path:'/statistics'
-            render: => boundComponent StatsPage
+            render: boundComponent StatsPage
           L_ Route,
             path:'/calendar'
-            render: => boundComponent CalendarPage
+            render: boundComponent CalendarPage
           L_ Route,
             path:'/settings'
-            render: => boundComponent SettingsPage
+            render: boundComponent SettingsPage
           L_ Route,
             path:'/projects'
-            render: => boundComponent ProjectsPage
+            render: boundComponent ProjectsPage
           L_ Route,
             path:'/ADMIN'
-            render: => boundComponent AdminPage
+            render: boundComponent AdminPage
 
     L_ Router, null,
       L.div 0,
@@ -97,9 +99,9 @@ export default class App extends React.Component
             component:LoginPage
           L_ Route,
             path:'/'
-            render: ()=>
+            render: (route)=>
               if @state.uid
-                return appComponent()
+                return appComponent(route)
               else
                 L_ LandingPage
 

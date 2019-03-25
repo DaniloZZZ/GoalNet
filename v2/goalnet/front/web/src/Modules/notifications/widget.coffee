@@ -22,7 +22,6 @@ export default class Widget extends React.Component
 						key:i
 						L_ JsonBeauty,0,n
 			elems = el
-		console.log 'elemss',elems
 		L.div className:'notif',
 			L.div className:'widget',
 				elems

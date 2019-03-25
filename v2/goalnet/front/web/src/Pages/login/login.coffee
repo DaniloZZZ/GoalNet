@@ -40,4 +40,4 @@ export default class LoginPage extends Component
                 L.label 0, 'Password'
                 L_ Field, name:'pwd',type:'password',component:'input'
 
-              L.button type:'submit','login'
+              L.button type:'submit','Login'
