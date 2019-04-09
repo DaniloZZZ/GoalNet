@@ -15,5 +15,11 @@ export get_session = ()->
       action:'get.session'
       resolve
 
+export get_status = ()->
+  new Promise (resolve, reject)->
+    browser.runtime.sendMessage
+      action:'get.status'
+      resolve
+
 
 

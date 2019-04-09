@@ -1,16 +1,29 @@
 host = 'lykov.tech'
+host = 'localhost'
 apipath = "ws://"+host+":3032"
+
+STATES=
+  Open:'open'
+  Closed:'closed'
+  Error:'error'
+  Init:'init'
 
 export default class GoalNetApi
   constructor:(props)->
-    @ws = new WebSocket(apipath)
+    ws = new WebSocket(apipath)
+    @state = STATES.Init
+    ws.onopen = => @state = STATES.Open
+    ws.onclose = => @state = STATES.Closed
+    ws.onerror = => @state = STATES.Error
+    @ws = ws
     auth =
-      token:props.token or 'machine'
+      token:props.token
+      action:'get.user.module'
     console.log 'auth with token', auth
     sendm = =>
       msg = JSON.stringify auth
-      console.log 'msg', msg
-      console.log 'ws', @ws
+      console.log 'sending message', msg
+      console.log 'websocket', @ws
       @ws.send msg
     setTimeout sendm, 100
 
